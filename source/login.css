@@ -1,0 +1,124 @@
+/* * login.css */
+/* * Classes */
+/* ** Colors */
+.green-bg {
+  background-color: #70c7a9;
+}
+
+.green-fg {
+  color: #70c7a9;
+}
+
+/* FIXME: way too dark */
+.grey-bg {
+  background-color: #969696;
+}
+
+.grey-fg {
+  color: #969696;
+}
+
+.purple-bg {
+  background-color: #606b9b;
+}
+
+.purple-fg {
+  color: #606b9b;
+}
+
+.white-bg {
+  background-color: #ffffff;
+}
+
+.white-fg {
+  color: #ffffff;
+}
+
+/* ** Fonts */
+.raleway {
+  font-family: "Raleway", sans-serif;
+  font-weight: 900;
+}
+
+.open-sans {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+}
+
+.helvetica {
+  font-family: helvetica;
+}
+
+/* * Elements */
+/* ** Body / Main */
+body {
+  height: 100vh;
+
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  display: flex;
+  flex-direction: row;
+
+  height: 100%;
+  width: 100%;
+}
+
+/* ** Login Left */
+#login-screen-left {
+  flex: 45;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding-left: 8%;
+  /* TODO: do we need this */
+  /* padding-bottom: 4%; */
+}
+
+#login-title {
+  font-size: 2.7em;
+}
+
+#login-subtitle {
+  font-size: 1.4em;
+}
+
+/* ** Login Right */
+#login-screen-right {
+  flex: 55;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#login-prompt {
+  display: flex;
+  flex-direction: column;
+
+  padding-left: 20%;
+  padding-right: 20%;
+}
+
+#signin-text {
+  font-size: 2.1em;
+}
+
+input.login {
+  padding-left: 0.6em;
+  font-size: 1em;
+}
+
+#login-button {
+  margin-left: auto;
+}
+
+/* * End */
+/* Local Variables: */
+/* eval: (outshine-mode 1) */
+/* eval: (outshine-cycle-buffer) */
+/* End: */

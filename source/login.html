@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Lango!</title>
+
+    <link rel="stylesheet" type="text/css" href="reset.css" />
+    <link rel="stylesheet" type="text/css" href="login.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway:400,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main>
+      <!-- TODO: make this one big react component with subcomponents -->
+      <section id="login-screen-left" class="purple-bg">
+        <section id="login-title" class="white-fg raleway">
+          Welcome to Lango!
+        </section>
+        <section id="login-subtitle" class="green-fg">
+          Customize your vocabulary
+        </section>
+      </section>
+      <section id="login-screen-right">
+        <section id="login-prompt">
+          <section id="signin-text" class="purple-fg raleway">
+            Sign in to Lango!
+          </section>
+          <input
+            id="login-name"
+            class="login grey-bg black-fg"
+            name=""
+            type="text"
+            value=""
+            placeholder="Name"
+          />
+          <input
+            id="login-email"
+            class="login grey-bg black-fg"
+            name=""
+            type="text"
+            value=""
+            placeholder="Email"
+          />
+          <!-- query database, start up other react component -->
+          <button
+            id="login-button"
+            class="green-bg white-fg helvetica"
+            onclick="alert('TODO')"
+          >
+            Login
+          </button>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
