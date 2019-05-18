@@ -22,7 +22,8 @@ function requestTranslation(text, callback) {
 
   // TODO: change Chinese if branny names it something different
   request.onload = () => callback(JSON.parse(request.responseText).Chinese);
-  request.onerror = () => alert("There was an error with translation request.");
+  request.onerror = () =>
+    alert("There was an error with the translation request.");
 
   request.send();
 }
@@ -47,4 +48,17 @@ function addCardKeyDown(event) {
   }
 }
 
-// TODO: database, etc.
+/*
+ * Saves the card to the database.
+ */
+function saveCard() {
+  const en = document.querySelector(EN_ADD_CARD_SELECTOR).value;
+  const tl = document.querySelector(TL_ADD_CARD_SELECTOR).innerText;
+
+  let request = new XMLHttpRequest();
+  request.open("POST", `store?english=${en}&chinese=${tl}`, true);
+
+  request.onerror = () => alert("There was an error with saving the card.");
+
+  request.send();
+}
