@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Lango!</title>
+    <link rel="stylesheet" type="text/css" href="reset.css" />
+    <link rel="stylesheet" type="text/css" href="flashcards.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway:400,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root">
+      <main>
+        <section class="title-add">
+          <!-- what the hell HTML5 element do i use for this one -->
+          <div class="title-add-format">
+            <button
+              id="review-button"
+              class="white-fg dark-purple-bg"
+              onclick="alert('idiot')"
+            >
+              Start Review
+            </button>
+          </div>
+          <h3 class="raleway dark-purple-fg">Lango!</h3>
+          <div class="title-add-format"></div>
+        </section>
+        <!-- TODO: each card would be a react component -->
+        <!-- though, only the tl one needs to update through JS -->
+        <section class="card-add">
+          <figure class="card-add">
+            <!-- TODO: we might be able to use react to resize this if we care -->
+            <textarea
+              id="card-en-add"
+              type="text"
+              placeholder="English"
+              onkeypress="addCardKeyDown(event)"
+            ></textarea>
+          </figure>
+          <figure class="card-add">
+            <!-- TODO: color is grey if placeholder. This should be a react component. -->
+            <span id="card-tl-add">Translation</span>
+          </figure>
+        </section>
+        <div class="save-button">
+          <button class="save-button green-bg" onclick="no">Save</button>
+        </div>
+        <!-- TODO: react component -->
+        <aside class="user-add white-fg dark-purple-bg">Branny Buddy</aside>
+      </main>
+    </div>
+    <script
+      src="https://unpkg.com/react@16/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <!-- for now, we can use jsx here because it's only pure JS -->
+    <!-- TODO: eventually patch this -->
+    <script src="script.jsx"></script>
+  </body>
+</html>

@@ -1,0 +1,166 @@
+/*****************************************************************************/
+/*                                  General                                  */
+/*****************************************************************************/
+body {
+  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+}
+
+.green-bg {
+  background-color: #70c7a9;
+}
+
+.green-fg {
+  color: #70c7a9;
+}
+
+/* FIXME: way too dark */
+.grey-bg {
+  background-color: #969696;
+}
+
+.grey-fg {
+  color: #969696;
+}
+
+.dark-purple-bg {
+  background-color: #606b9b;
+}
+
+.dark-purple-fg {
+  color: #606b9b;
+}
+
+.white-bg {
+  background-color: #ffffff;
+}
+
+.white-fg {
+  color: #ffffff;
+}
+
+.raleway {
+  font-family: "Raleway", sans-serif;
+}
+
+.open-sans {
+  font-family: "Open Sans", sans-serif;
+}
+
+.helvetica {
+  font-family: helvetica, "angry font >:(";
+}
+
+/*****************************************************************************/
+/*                                  Specific                                 */
+/*****************************************************************************/
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+/* FIXME: what's the mobile width? */
+@media only screen and (min-width: 541px) {
+  main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+
+  section.title-add {
+    flex: 1;
+
+    display: flex;
+    flex-direction: row;
+
+    padding-top: 1%;
+    margin-left: 4%;
+    margin-right: 4%;
+  }
+
+  div.title-add-format {
+    /* should be the same as the button */
+    flex: 1;
+  }
+
+  #review-button {
+    font-size: 1em;
+
+    padding: 0.5em;
+    padding-left: 2em;
+    padding-right: 2em;
+    margin-right: auto;
+  }
+
+  section.title-add > h3 {
+    flex: 1;
+
+    font-weight: bold;
+    font-size: 3em;
+    text-align: center;
+  }
+
+  section.card-add {
+    flex: 5;
+
+    display: flex;
+    flex-direction: row;
+
+    width: 80%;
+    padding-left: 10%;
+    padding-right: 10%;
+  }
+
+  figure.card-add {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #000000;
+    padding-left: 2%;
+    padding-right: 2%;
+    margin-left: 2%;
+    margin-right: 2%;
+  }
+
+  #card-en-add {
+    flex: 1;
+
+    display: block;
+    /* TODO: add this back at the end */
+    /* border: 0px none; */
+    resize: none;
+    height: 6em;
+
+    font-size: 1.2em;
+    text-align: center;
+  }
+
+  #card-tl-add {
+    flex: 1;
+
+    height: 4em;
+    font-size: 1.2em;
+    text-align: center;
+  }
+
+  div.save-button {
+    flex: 1;
+  }
+
+  button.save-button {
+    margin-left: auto;
+  }
+
+  aside.user-add {
+    /* we want this as em to keep the same height as text */
+    flex: 0 0 1.5em;
+
+    font-size: 1em;
+    text-align: center;
+  }
+}
