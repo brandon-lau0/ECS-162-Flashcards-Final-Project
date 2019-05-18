@@ -1,5 +1,5 @@
 const express = require('express')
-const port = 50906
+const port = 3000
 const sqlite3 = require("sqlite3").verbose();  // use sqlite
 const fs = require("fs"); // file system
 const dbFileName = "Flashcards.db";
@@ -53,7 +53,7 @@ app.get('/query', queryHandler );   // if not, is it a valid query?
 app.use( fileNotFound );            // otherwise not found
 
 // app.listen(port, function (){console.log('Listening... Do something now!');} )
-app.listen(3000, function (){console.log('Listening... Do something now!');} )
+app.listen(port, function (){console.log('Listening... Do something now!');} )
 
 
 
