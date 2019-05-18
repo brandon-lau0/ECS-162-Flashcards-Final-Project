@@ -23,7 +23,7 @@
           <div class="title-add-format">
             <button
               id="review-button"
-              class="white-fg dark-purple-bg"
+              class="helvetica white-fg dark-purple-bg"
               onclick="alert('idiot')"
             >
               Start Review
@@ -39,6 +39,7 @@
             <!-- TODO: we might be able to use react to resize this if we care -->
             <textarea
               id="card-en-add"
+              class="helvetica"
               type="text"
               placeholder="English"
               onkeypress="addCardKeyDown(event)"
@@ -46,14 +47,21 @@
           </figure>
           <figure class="card-add">
             <!-- TODO: color is grey if placeholder. This should be a react component. -->
-            <span id="card-tl-add">Translation</span>
+            <span id="card-tl-add" class="helvetica">Translation</span>
           </figure>
         </section>
         <div class="save-button">
-          <button class="save-button green-bg" onclick="no">Save</button>
+          <button
+            class="save-button helvetica white-fg green-bg"
+            onclick="saveCard()"
+          >
+            Save
+          </button>
         </div>
         <!-- TODO: react component -->
-        <aside class="user-add white-fg dark-purple-bg">Branny Buddy</aside>
+        <aside class="user-add helvetica white-fg dark-purple-bg">
+          <div>Branny Buddy</div>
+        </aside>
       </main>
     </div>
     <script

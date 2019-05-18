@@ -1,1 +1,2 @@
-- Reference desktop width seems to be 950px;
+- Reference desktop seems to be 950px by 550px;
+- Reference tablet seems to be iPad (lmao same my ass).
