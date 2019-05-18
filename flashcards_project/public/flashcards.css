@@ -163,7 +163,7 @@ div.save-button {
   flex: 1.2;
 
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: start;
 
   padding-top: 5%;
@@ -283,7 +283,6 @@ aside.user-add {
     }
 
     div.save-button {
-      justify-content: end;
       align-items: start;
 
       /* section.card-add padding + figure.card-add margin */
