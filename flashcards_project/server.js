@@ -1,4 +1,12 @@
+"use strict";
+
 const express = require('express')
+const APIrequest = require('request');
+const http = require('http');
+
+const APIkey = "AIzaSyAt9g5D8RZEYrisegFBSwmVazNBn0I3tP0";  // Google Translate API Key
+const url = "https://translation.googleapis.com/language/translate/v2?key=" + APIkey
+
 const port = 3000
 const sqlite3 = require("sqlite3").verbose();  // use sqlite
 const fs = require("fs"); // file system
@@ -14,41 +22,95 @@ const db = new sqlite3.Database(dbFileName, sqlite3.OPEN_READWRITE,
     });
 
 function queryHandler(req, res, next) {
-    let url = req.url;
-    let qObj = req.query;
-    let engl = qObj.english; // need to change this still gotta see the json file
-    let trans = qObj.trans; // same here
+  let url = req.url;
+  let qObj = req.query;
+  let engl = qObj.english; // need to change this still gotta see the json file
+  let trans = qObj.trans; // same here
 
-    if (qObj.english != undefined) {
-        db.run(`INSERT INTO Flashcards(user_id,
-                                           english_text,
-                                           trans_text,
-                                           num_show,
-                                           num_correct) VALUES(1, engl, trans, 0, 0)`, 
-            function(err) {
-                if (err) {
-                  return console.log("something is wrong cannot put the data to Database", err.message);
-                }
-                // get the last insert id
-                console.log(`A row has been inserted ${this.changes}`);
-              });
-    } else {
-        next();
+  if (qObj.english != undefined) {
+      db.run(`INSERT INTO Flashcards(user_id,
+                                         english_text,
+                                         trans_text,
+                                         num_show,
+                                         num_correct) VALUES(1, engl, trans, 0, 0)`, 
+          function(err) {
+              if (err) {
+                return console.log("something is wrong cannot put the data to Database", err.message);
+              }
+              // get the last insert id
+              console.log(`A row has been inserted ${this.changes}`);
+            });
+  } else {
+      next();
+  }
+}
+
+function translateTextHandler(req, res, next) {
+  // browser sends request to server in the format: {"english" : "text"}
+  let qObj = req.query;
+  // let qObj = {"english" : "hello, how are you? what's the plan today?"};
+
+  if (qObj != undefined) {
+    let requestObj =
+      {
+        "source": "en",
+        "target": "zh-TW",
+        "q": [
+          qObj.english
+        ]
+      };
+
+    function TranslateAPICallback(err, APIResHead, APIResBody) {
+      if ((err) || (APIResHead.statusCode != 200)) {
+        // API not working
+        console.log("API error-- not working");
+        console.log(APIResBody);
+      } else {
+        if (APIResHead.error) {
+          // API request worked but not giving data
+          console.log("API request worked, but no data returned");
+          console.log(APIResHead.error);
+        } else {
+          console.log("In Chinese: ", 
+              APIResBody.data.translations[0].translatedText);
+          console.log("\nJSON was:");
+          console.log(JSON.stringify(APIResBody, undefined, 2));
+          console.log("\n");
+
+          res.json({
+            "English" : qObj.english,
+            "Chinese" : APIResBody.data.translations[0].translatedText
+          });
+        }
+      }
     }
+
+    APIrequest(
+      {
+        url: url,
+        method: "POST",
+        headers: {"content-type": "application/json"},
+        json: requestObj
+      }, 
+      TranslateAPICallback  // translateAPI callback function
+    );
+  } else {
+    next();
+  }
 }
 
 function fileNotFound(req, res) {
     let url = req.url;
     res.type('text/plain');
     res.status(404);
-    // res.send('Cannot find '+url);
-    res.send('Hello there!! '+url);
+    res.send('Cannot find ' + url);
 }
 
 // put together the server pipeline
 const app = express()
 app.use(express.static('public'));  // can I find a static file?
-app.get('/query', queryHandler );   // if not, is it a valid query?
+app.get('/translate', translateTextHandler);
+//app.get('/query', queryHandler );   // if not, is it a valid query?
 app.use( fileNotFound );            // otherwise not found
 
 // app.listen(port, function (){console.log('Listening... Do something now!');} )
