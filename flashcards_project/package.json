@@ -11,5 +11,9 @@
   "license": "UNLICENSED",
   "devDependencies": {
     "babel-cli": "^6.26.0"
+  },
+  "dependencies": {
+    "express": "^4.17.0",
+    "sqlite3": "^4.0.8"
   }
 }
