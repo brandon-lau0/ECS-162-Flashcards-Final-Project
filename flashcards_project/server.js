@@ -13,7 +13,7 @@ const db = new sqlite3.Database(dbFileName, sqlite3.OPEN_READWRITE,
         console.log("you successfully connected to the FlashCards database.")
     });
 
-function queryHandler(req,res,next) {
+function queryHandler(req, res, next) {
     let url = req.url;
     let qObj = req.query;
     let engl = qObj.english; // need to change this still gotta see the json file
@@ -43,12 +43,11 @@ function fileNotFound(req, res) {
     res.status(404);
     // res.send('Cannot find '+url);
     res.send('Hello there!! '+url);
-
-    }
+}
 
 // put together the server pipeline
 const app = express()
-app.use(express.static('public'));  // can I find a static file? 
+app.use(express.static('public'));  // can I find a static file?
 app.get('/query', queryHandler );   // if not, is it a valid query?
 app.use( fileNotFound );            // otherwise not found
 
