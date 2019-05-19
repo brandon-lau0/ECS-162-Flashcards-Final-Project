@@ -73,9 +73,10 @@ function translateTextHandler(req, res, next) {
         } else {
           console.log("In Chinese: ", 
               APIResBody.data.translations[0].translatedText);
-          console.log("\n\nJSON was:");
+          console.log("\nJSON was:");
           console.log(JSON.stringify(APIResBody, undefined, 2));
-          
+          console.log("\n");
+
           res.json({
             "English" : qObj.english,
             "Chinese" : APIResBody.data.translations[0].translatedText
