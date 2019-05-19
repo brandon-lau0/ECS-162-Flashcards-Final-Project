@@ -112,12 +112,10 @@ var CreationCards = function (_React$Component2) {
         var input = document.getElementById(_this2.props.inputId).value;
 
         event.preventDefault();
-        // TODO: revert this if not testing
-        // requestTranslation(input, translation => {
-        //   console.log(`${input}\n${translation}`);
-        //   this.setState({ tlText: translation, translated: true });
-        // });
-        _this2.setState({ tlText: input });
+        requestTranslation(input, function (translation) {
+          console.log(input + "\n" + translation);
+          _this2.setState({ tlText: translation });
+        });
       }
     };
 

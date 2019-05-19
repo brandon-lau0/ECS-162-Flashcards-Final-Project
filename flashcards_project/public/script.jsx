@@ -148,12 +148,10 @@ class CreationCards extends React.Component {
       const input = document.getElementById(this.props.inputId).value;
 
       event.preventDefault();
-      // TODO: revert this if not testing
-      // requestTranslation(input, translation => {
-      //   console.log(`${input}\n${translation}`);
-      //   this.setState({ tlText: translation, translated: true });
-      // });
-      this.setState({ tlText: input });
+      requestTranslation(input, translation => {
+        console.log(`${input}\n${translation}`);
+        this.setState({ tlText: translation });
+      });
     }
   };
 
