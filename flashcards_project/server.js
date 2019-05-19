@@ -24,10 +24,10 @@ const db = new sqlite3.Database(dbFileName, sqlite3.OPEN_READWRITE,
 function queryHandler(req, res, next) {
   let url = req.url;
   let qObj = req.query;
-  let engl = qObj.English; // need to change this still gotta see the json file
+  let engl = qObj.english; // need to change this still gotta see the json file
   let trans = qObj.trans; // same here
 
-  if (qObj.English != undefined) {
+  if (qObj.english != undefined) {
       db.run(`INSERT INTO Flashcards(user_id,
                                          english_text,
                                          trans_text,
@@ -46,9 +46,9 @@ function queryHandler(req, res, next) {
 }
 
 function translateTextHandler(req, res, next) {
-  // browser sends request to server in the format: {"English" : "text"}
-  // let qObj = req.query;
-  let qObj = {"English" : "hello, how are you? what's the plan today?"};
+  // browser sends request to server in the format: {"english" : "text"}
+  let qObj = req.query;
+  // let qObj = {"english" : "hello, how are you? what's the plan today?"};
 
   if (qObj != undefined) {
     let requestObj =
@@ -56,7 +56,7 @@ function translateTextHandler(req, res, next) {
         "source": "en",
         "target": "zh-TW",
         "q": [
-          qObj.English
+          qObj.english
         ]
       };
 
@@ -77,7 +77,7 @@ function translateTextHandler(req, res, next) {
           console.log(JSON.stringify(APIResBody, undefined, 2));
           
           res.json({
-            "English" : qObj.English,
+            "English" : qObj.english,
             "Chinese" : APIResBody.data.translations[0].translatedText
           });
         }
@@ -108,7 +108,7 @@ function fileNotFound(req, res) {
 // put together the server pipeline
 const app = express()
 app.use(express.static('public'));  // can I find a static file?
-app.post('/translate', translateTextHandler);
+app.get('/translate', translateTextHandler);
 //app.get('/query', queryHandler );   // if not, is it a valid query?
 app.use( fileNotFound );            // otherwise not found
 
