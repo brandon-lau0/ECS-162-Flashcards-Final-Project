@@ -32,23 +32,22 @@ function queryHandler(req, res, next) {
                                          english_text,
                                          trans_text,
                                          num_show,
-                                         num_correct) VALUES(1, ?, ?, 0, 0)`, [engl, trans],
+                                         num_correct) VALUES (1, ?, ?, 0, 0)`, [engl, trans],
           function(err) {
-              if (err) {
-                return console.log("something is wrong cannot put the data to Database", err.message);
-              }
-              // get the last insert id
-              console.log(`A row has been inserted ${this.changes}`);
-            });
+            if (err) {
+              return console.log("something is wrong cannot put the data to Database", err.message);
+            }
+            // get the last insert id
+            console.log(`A row has been inserted ${this.changes}`);
+          });
   } else {
-      next();
+    next();
   }
 }
 
 function translateTextHandler(req, res, next) {
   // browser sends request to server in the format: {"english" : "text"}
   let qObj = req.query;
-  // let qObj = {"english" : "hello, how are you? what's the plan today?"};
 
   if (qObj != undefined) {
     let requestObj =
