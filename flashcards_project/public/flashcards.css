@@ -44,6 +44,10 @@ button {
   color: #ffffff;
 }
 
+.black-fg {
+  color: #000000;
+}
+
 .raleway {
   font-family: "Raleway", sans-serif;
 }
@@ -138,9 +142,10 @@ figure.card-add {
   flex: 1;
 
   display: block;
-  /* TODO: add this back at the end */
-  /* border: 0px none; */
+  border: 0px none;
+  outline: none;
   resize: none;
+
   height: 5em;
   /* 100% - padding-left and padding-right of figure.card-add */
   width: 96%;
@@ -149,6 +154,12 @@ figure.card-add {
 
   font-size: 1.2em;
   text-align: center;
+}
+
+#card-en-add::placeholder {
+  color: #969696;
+  /* firefox pls */
+  opacity: 1;
 }
 
 #card-tl-add {
@@ -283,7 +294,7 @@ aside.user-add {
     }
 
     div.save-button {
-      align-items: start;
+      align-items: flex-start;
 
       /* section.card-add padding + figure.card-add margin */
       padding-left: 6%;

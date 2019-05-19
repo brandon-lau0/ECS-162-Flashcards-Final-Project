@@ -16,54 +16,7 @@
     />
   </head>
   <body>
-    <div id="root">
-      <main>
-        <section class="title-add">
-          <!-- what the hell HTML5 element do i use for this one -->
-          <div class="title-add-format">
-            <button
-              id="review-button"
-              class="helvetica white-fg dark-purple-bg"
-              onclick="alert('idiot')"
-            >
-              Start Review
-            </button>
-          </div>
-          <h3 class="raleway dark-purple-fg">Lango!</h3>
-          <div class="title-add-format"></div>
-        </section>
-        <!-- TODO: each card would be a react component -->
-        <!-- though, only the tl one needs to update through JS -->
-        <section class="card-add">
-          <figure class="card-add">
-            <!-- TODO: we might be able to use react to resize this if we care -->
-            <textarea
-              id="card-en-add"
-              class="helvetica"
-              type="text"
-              placeholder="English"
-              onkeypress="addCardKeyDown(event)"
-            ></textarea>
-          </figure>
-          <figure class="card-add">
-            <!-- TODO: color is grey if placeholder. This should be a react component. -->
-            <span id="card-tl-add" class="helvetica">Translation</span>
-          </figure>
-        </section>
-        <div class="save-button">
-          <button
-            class="save-button helvetica white-fg green-bg"
-            onclick="saveCard()"
-          >
-            Save
-          </button>
-        </div>
-        <!-- TODO: react component -->
-        <aside class="user-add helvetica white-fg dark-purple-bg">
-          <div>Branny Buddy</div>
-        </aside>
-      </main>
-    </div>
+    <div id="root"></div>
     <script
       src="https://unpkg.com/react@16/umd/react.development.js"
       crossorigin
@@ -72,8 +25,6 @@
       src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
       crossorigin
     ></script>
-    <!-- for now, we can use jsx here because it's only pure JS -->
-    <!-- TODO: eventually patch this -->
-    <script src="script.jsx"></script>
+    <script src="script.js"></script>
   </body>
 </html>
