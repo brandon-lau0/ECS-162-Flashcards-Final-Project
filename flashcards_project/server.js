@@ -47,9 +47,9 @@ function queryHandler(req, res, next) {
 
 function translateTextHandler(req, res, next) {
   // browser sends request to server in the format: {"english" : "text"}
-  // let qObj = req.query;
-
-  let qObj = {"english" : "hello, how are you? what's for dinner tonight?"};
+  let qObj = req.query;
+  // let qObj = {"english" : "hello, how are you? what's for dinner tonight?"};
+  
   if (qObj != undefined) {
     let requestObj =
       {
