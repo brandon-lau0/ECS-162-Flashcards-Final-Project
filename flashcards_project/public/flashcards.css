@@ -105,6 +105,10 @@ div.title-add-format {
   padding-right: 0.5em;
 }
 
+#review-button:hover {
+  cursor: pointer;
+}
+
 section.title-add > h3 {
   flex: 1;
 
@@ -190,6 +194,10 @@ button.save-button {
   padding: 0.5em;
   padding-left: 1.6em;
   padding-right: 1.6em;
+}
+
+button.save-button:hover {
+  cursor: pointer;
 }
 
 aside.user-add {
