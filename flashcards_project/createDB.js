@@ -9,7 +9,7 @@ const db = new sqlite3.Database(dbFileName,
         if(err) {
             console.log("You did not create the database something is wrong", err);
         }
-        console.log("you successfully create the FlashCards database.");
+        console.log("You successfully created the FlashCards database.");
     });  // object, not database.
 
 // Initialize table.
@@ -20,12 +20,12 @@ const cmdStr = 'CREATE TABLE Flashcards (user_id INT,english_text VARCHAR(500),t
 db.run(cmdStr,tableCreationCallback);
 
 function tableCreationCallback(err) {
-    if (err) {
-	console.log("Table creation error you already create a table",err);
-    } else {
-	console.log("Database created");
-	db.close();
-    }
+  if (err) {
+   console.log("Table creation error you already created a table", err);
+  } else {
+    console.log("Database Table created");
+    db.close();
+  }
 }
 /***********************************END OF CREATING TABLE ***************************/
 
