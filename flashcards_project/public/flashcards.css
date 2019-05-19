@@ -145,8 +145,10 @@ figure.card-add {
   border: 0px none;
   outline: none;
   resize: none;
+  overflow: hidden;
 
-  height: 5em;
+  min-height: 0%;
+  max-height: 100%;
   /* 100% - padding-left and padding-right of figure.card-add */
   width: 96%;
   /* this is required for the above to work */
@@ -165,7 +167,6 @@ figure.card-add {
 #card-tl-add {
   flex: 1;
 
-  /* height: 4em; */
   font-size: 1.2em;
   text-align: center;
 }
@@ -237,14 +238,6 @@ aside.user-add {
     margin-bottom: 0%;
     margin-left: 2.5%;
     margin-right: 2.5%;
-  }
-
-  #card-en-add {
-    height: 5em;
-  }
-
-  #card-tl-add {
-    height: 4em;
   }
 
   div.save-button {

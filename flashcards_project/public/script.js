@@ -107,9 +107,7 @@ var CreationCards = function (_React$Component2) {
 
     var _this2 = _possibleConstructorReturn(this, (CreationCards.__proto__ || Object.getPrototypeOf(CreationCards)).call(this, props));
 
-    _this2.onKeyPress = function (event) {
-      console.log(event);
-
+    _this2.onKeyDown = function (event) {
       if (event.key == "Enter") {
         var input = document.getElementById(_this2.props.inputId).value;
 
@@ -123,7 +121,11 @@ var CreationCards = function (_React$Component2) {
       }
     };
 
-    _this2.state = { tlText: undefined };
+    _this2.onKeyUp = function (_) {
+      _this2.setState({ inputStyle: _this2.inputStyle() });
+    };
+
+    _this2.state = { inputStyle: _this2.inputStyle(), tlText: undefined };
     return _this2;
   }
 
@@ -146,7 +148,9 @@ var CreationCards = function (_React$Component2) {
             className: "helvetica",
             type: "text",
             placeholder: "English",
-            onKeyPress: this.onKeyPress
+            onKeyDown: this.onKeyDown,
+            onKeyUp: this.onKeyUp,
+            style: this.state.inputStyle
           })
         ),
         React.createElement(
@@ -162,8 +166,57 @@ var CreationCards = function (_React$Component2) {
     }
 
     /*
+     * Generates the inline styling for the input text.
+     *
+     * delet dis
+     *
+     * all this hard-coding
+     * you retarded noob programmer
+     *
+     * TODO: We probably have to generalize this in the future for the
+     * review view.
+     */
+
+  }, {
+    key: "inputStyle",
+    value: function inputStyle() {
+      var inputElement = document.getElementById(this.props.inputId);
+      var inputStyle = { boxSizing: "border-box" };
+      var dummy = void 0;
+
+      if (inputElement) {
+        dummy = inputElement.cloneNode();
+        dummy.value = inputElement.value;
+
+        dummy.style.width = window.getComputedStyle(inputElement).width;
+      } else {
+        dummy = document.createElement("textarea");
+        dummy.value = "branny";
+
+        dummy.id = this.props.inputId; // same as what the input card would have
+        dummy.classList.add("helvetica");
+      }
+
+      dummy.style.height = "1px";
+      dummy.style.visibility = "hidden";
+
+      document.body.appendChild(dummy);
+
+      inputStyle.height = dummy.scrollHeight;
+
+      document.body.removeChild(dummy);
+
+      return inputStyle;
+    }
+
+    /*
      * Watches for when the user presses RET and makes the translation
      * request accordingly.
+     */
+
+
+    /*
+     * Watches for a key press and resizes the input box accordingly.
      */
 
   }]);
@@ -279,7 +332,7 @@ var CreationScreen = function (_React$Component5) {
           { className: "save-button" },
           React.createElement(SaveButton, { inputId: "card-en-add", outputId: "card-tl-add" })
         ),
-        React.createElement(UsernameBar, null)
+        React.createElement(UsernameBar, { username: "Branny Buddy" })
       );
     }
   }]);

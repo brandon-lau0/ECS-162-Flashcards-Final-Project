@@ -67,7 +67,7 @@ class CreationTitle extends React.Component {
 class CreationCards extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { tlText: undefined };
+    this.state = { inputStyle: this.inputStyle(), tlText: undefined };
   }
 
   render() {
@@ -84,7 +84,9 @@ class CreationCards extends React.Component {
             className="helvetica"
             type="text"
             placeholder="English"
-            onKeyPress={this.onKeyPress}
+            onKeyDown={this.onKeyDown}
+            onKeyUp={this.onKeyUp}
+            style={this.state.inputStyle}
           />
         </figure>
         <figure className="card-add">
@@ -97,12 +99,51 @@ class CreationCards extends React.Component {
   }
 
   /*
+   * Generates the inline styling for the input text.
+   *
+   * delet dis
+   *
+   * all this hard-coding
+   * you retarded noob programmer
+   *
+   * TODO: We probably have to generalize this in the future for the
+   * review view.
+   */
+  inputStyle() {
+    const inputElement = document.getElementById(this.props.inputId);
+    const inputStyle = { boxSizing: "border-box" };
+    let dummy;
+
+    if (inputElement) {
+      dummy = inputElement.cloneNode();
+      dummy.value = inputElement.value;
+
+      dummy.style.width = window.getComputedStyle(inputElement).width;
+    } else {
+      dummy = document.createElement("textarea");
+      dummy.value = "branny";
+
+      dummy.id = this.props.inputId; // same as what the input card would have
+      dummy.classList.add("helvetica");
+    }
+
+    dummy.style.height = "1px";
+    dummy.style.visibility = "hidden";
+
+    document.body.appendChild(dummy);
+
+    inputStyle.height = dummy.scrollHeight;
+
+    document.body.removeChild(dummy);
+
+    return inputStyle;
+  }
+
+  /*
    * Watches for when the user presses RET and makes the translation
    * request accordingly.
    */
-  onKeyPress = event => {
-    console.log(event);
-
+  onKeyDown = event => {
     if (event.key == "Enter") {
       const input = document.getElementById(this.props.inputId).value;
 
@@ -114,6 +155,13 @@ class CreationCards extends React.Component {
       // });
       this.setState({ tlText: input });
     }
+  };
+
+  /*
+   * Watches for a key press and resizes the input box accordingly.
+   */
+  onKeyUp = _ => {
+    this.setState({ inputStyle: this.inputStyle() });
   };
 }
 
@@ -181,11 +229,10 @@ class CreationScreen extends React.Component {
       <main>
         <CreationTitle />
         <CreationCards inputId="card-en-add" outputId="card-tl-add" />
-
         <div className="save-button">
           <SaveButton inputId="card-en-add" outputId="card-tl-add" />
         </div>
-        <UsernameBar />
+        <UsernameBar username="Branny Buddy" />
       </main>
     );
   }
