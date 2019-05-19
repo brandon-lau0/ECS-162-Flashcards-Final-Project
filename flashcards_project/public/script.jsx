@@ -29,7 +29,7 @@ function requestTranslation(text, callback) {
 }
 
 /*
- * Watches for when the user presses RET and makes the translation
+ * Watches for when the user presses RTN and makes the translation
  * request accordingly.
  * TODO: this name sucks
  */
