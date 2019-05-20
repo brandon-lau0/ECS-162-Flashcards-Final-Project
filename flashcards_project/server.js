@@ -39,6 +39,7 @@ function queryHandler(req, res, next) {
             }
             // get the last insert id
             console.log(`A row has been inserted ${this.changes}`);
+            res.json({});
           });
   } else {
     next();
