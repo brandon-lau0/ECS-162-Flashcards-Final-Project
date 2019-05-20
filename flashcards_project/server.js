@@ -24,15 +24,18 @@ const db = new sqlite3.Database(dbFileName, sqlite3.OPEN_READWRITE,
 function queryHandler(req, res, next) {
   let url = req.url;
   let qObj = req.query;
-  let engl = qObj.english; // need to change this still gotta see the json file
-  let trans = qObj.chinese; // same here
+
+  let engl = qObj.english;
+  let trans = qObj.chinese; 
+
 
   if (qObj.english != undefined) {
       db.run(`INSERT INTO Flashcards(user_id,
                                          english_text,
                                          trans_text,
                                          num_show,
-                                         num_correct) VALUES (1, ?, ?, 0, 0)`, [engl, trans],
+                                         num_correct) VALUES(1, ?, ?, 0, 0)`, [engl,trans], 
+
           function(err) {
             if (err) {
               return console.log("something is wrong cannot put the data to Database", err.message);
@@ -113,7 +116,6 @@ app.get('/translate', translateTextHandler);
 app.post('/store', queryHandler);   // if not, is it a valid query?
 app.use( fileNotFound );            // otherwise not found
 
-// app.listen(port, function (){console.log('Listening... Do something now!');} )
 app.listen(port, function (){console.log('Listening... Do something now!');} )
 
 
