@@ -24,24 +24,18 @@ const db = new sqlite3.Database(dbFileName, sqlite3.OPEN_READWRITE,
 function queryHandler(req, res, next) {
   let url = req.url;
   let qObj = req.query;
-<<<<<<< HEAD
+
   let engl = qObj.english;
   let trans = qObj.chinese; 
-=======
-  let engl = qObj.english; // need to change this still gotta see the json file
-  let trans = qObj.chinese; // same here
->>>>>>> 16f36b2fb31a162de09565f163b0268fddc91bc1
+
 
   if (qObj.english != undefined) {
       db.run(`INSERT INTO Flashcards(user_id,
                                          english_text,
                                          trans_text,
                                          num_show,
-<<<<<<< HEAD
                                          num_correct) VALUES(1, ?, ?, 0, 0)`, [engl,trans], 
-=======
-                                         num_correct) VALUES (1, ?, ?, 0, 0)`, [engl, trans],
->>>>>>> 16f36b2fb31a162de09565f163b0268fddc91bc1
+
           function(err) {
             if (err) {
               return console.log("something is wrong cannot put the data to Database", err.message);
@@ -119,11 +113,7 @@ function fileNotFound(req, res) {
 const app = express()
 app.use(express.static('public'));  // can I find a static file?
 app.get('/translate', translateTextHandler);
-<<<<<<< HEAD
-app.get('/query', queryHandler );   // if not, is it a valid query?
-=======
 app.post('/store', queryHandler);   // if not, is it a valid query?
->>>>>>> 16f36b2fb31a162de09565f163b0268fddc91bc1
 app.use( fileNotFound );            // otherwise not found
 
 app.listen(port, function (){console.log('Listening... Do something now!');} )
