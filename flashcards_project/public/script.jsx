@@ -62,7 +62,8 @@ class CreationTitle extends React.Component {
 }
 
 /*
- * Component for the English input and translation output cards.
+ * Component for the English input and translation output cards with
+ * button. lol whatever two items in one component
  */
 class CreationCards extends React.Component {
   constructor(props) {
@@ -76,8 +77,8 @@ class CreationCards extends React.Component {
     // show grey if no input
     const tlColor = input && this.state.tlText ? "black-fg" : "grey-fg";
 
-    return (
-      <section className="card-add">
+    return [
+      <section key="0" className="card-add">
         <figure className="card-add">
           <textarea
             id={this.props.inputId}
@@ -94,8 +95,17 @@ class CreationCards extends React.Component {
             {this.state.tlText || "Translation"}
           </span>
         </figure>
-      </section>
-    );
+      </section>,
+      // TODO: what the fuck does key do
+      <div key="1" className="save-button">
+        <button
+          className="save-button helvetica white-fg green-bg"
+          onClick={this.onClick}
+        >
+          Save
+        </button>
+      </div>
+    ];
   }
 
   /*
@@ -160,27 +170,12 @@ class CreationCards extends React.Component {
    */
   onKeyUp = _ => {
     this.setState({ inputStyle: this.inputStyle() });
+
+    // it's okay to modify value, since it's not managed by react
+    if (document.getElementById(this.props.inputId).value == "") {
+      this.setState({ tlText: "" });
+    }
   };
-}
-
-/*
- * Component for the save button. Might be overkill.
- */
-class SaveButton extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <button
-        className="save-button helvetica white-fg green-bg"
-        onClick={this.onClick}
-      >
-        Save
-      </button>
-    );
-  }
 
   /*
    * Makes a request to save the card.
@@ -191,6 +186,9 @@ class SaveButton extends React.Component {
     const tl = document.getElementById(this.props.outputId).innerText;
 
     saveCard(en, tl);
+
+    document.getElementById(this.props.inputId).value = "";
+    this.setState({ tlText: "" });
   };
 }
 
@@ -227,9 +225,6 @@ class CreationScreen extends React.Component {
       <main>
         <CreationTitle />
         <CreationCards inputId="card-en-add" outputId="card-tl-add" />
-        <div className="save-button">
-          <SaveButton inputId="card-en-add" outputId="card-tl-add" />
-        </div>
         <UsernameBar username="Branny Buddy" />
       </main>
     );

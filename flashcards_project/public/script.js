@@ -95,7 +95,8 @@ var CreationTitle = function (_React$Component) {
 }(React.Component);
 
 /*
- * Component for the English input and translation output cards.
+ * Component for the English input and translation output cards with
+ * button. lol whatever two items in one component
  */
 
 
@@ -121,6 +122,21 @@ var CreationCards = function (_React$Component2) {
 
     _this2.onKeyUp = function (_) {
       _this2.setState({ inputStyle: _this2.inputStyle() });
+
+      if (document.getElementById(_this2.props.inputId).value == "") {
+        _this2.setState({ tlText: "" });
+      }
+    };
+
+    _this2.onClick = function () {
+      console.log(_this2.props);
+      var en = document.getElementById(_this2.props.inputId).value;
+      var tl = document.getElementById(_this2.props.outputId).innerText;
+
+      saveCard(en, tl);
+
+      document.getElementById(_this2.props.inputId).value = "";
+      _this2.setState({ tlText: "" });
     };
 
     _this2.state = { inputStyle: _this2.inputStyle(), tlText: undefined };
@@ -135,9 +151,9 @@ var CreationCards = function (_React$Component2) {
       // show grey if no input
       var tlColor = input && this.state.tlText ? "black-fg" : "grey-fg";
 
-      return React.createElement(
+      return [React.createElement(
         "section",
-        { className: "card-add" },
+        { key: "0", className: "card-add" },
         React.createElement(
           "figure",
           { className: "card-add" },
@@ -160,7 +176,20 @@ var CreationCards = function (_React$Component2) {
             this.state.tlText || "Translation"
           )
         )
-      );
+      ),
+      // TODO: what the fuck does key do
+      React.createElement(
+        "div",
+        { key: "1", className: "save-button" },
+        React.createElement(
+          "button",
+          {
+            className: "save-button helvetica white-fg green-bg",
+            onClick: this.onClick
+          },
+          "Save"
+        )
+      )];
     }
 
     /*
@@ -217,47 +246,6 @@ var CreationCards = function (_React$Component2) {
      * Watches for a key press and resizes the input box accordingly.
      */
 
-  }]);
-
-  return CreationCards;
-}(React.Component);
-
-/*
- * Component for the save button. Might be overkill.
- */
-
-
-var SaveButton = function (_React$Component3) {
-  _inherits(SaveButton, _React$Component3);
-
-  function SaveButton(props) {
-    _classCallCheck(this, SaveButton);
-
-    var _this3 = _possibleConstructorReturn(this, (SaveButton.__proto__ || Object.getPrototypeOf(SaveButton)).call(this, props));
-
-    _this3.onClick = function () {
-      console.log(_this3.props);
-      var en = document.getElementById(_this3.props.inputId).value;
-      var tl = document.getElementById(_this3.props.outputId).innerText;
-
-      saveCard(en, tl);
-    };
-
-    return _this3;
-  }
-
-  _createClass(SaveButton, [{
-    key: "render",
-    value: function render() {
-      return React.createElement(
-        "button",
-        {
-          className: "save-button helvetica white-fg green-bg",
-          onClick: this.onClick
-        },
-        "Save"
-      );
-    }
 
     /*
      * Makes a request to save the card.
@@ -265,7 +253,7 @@ var SaveButton = function (_React$Component3) {
 
   }]);
 
-  return SaveButton;
+  return CreationCards;
 }(React.Component);
 
 /*
@@ -275,8 +263,8 @@ var SaveButton = function (_React$Component3) {
  */
 
 
-var UsernameBar = function (_React$Component4) {
-  _inherits(UsernameBar, _React$Component4);
+var UsernameBar = function (_React$Component3) {
+  _inherits(UsernameBar, _React$Component3);
 
   // PROPS should include the username
   function UsernameBar(props) {
@@ -308,8 +296,8 @@ var UsernameBar = function (_React$Component4) {
  */
 
 
-var CreationScreen = function (_React$Component5) {
-  _inherits(CreationScreen, _React$Component5);
+var CreationScreen = function (_React$Component4) {
+  _inherits(CreationScreen, _React$Component4);
 
   function CreationScreen(props) {
     _classCallCheck(this, CreationScreen);
@@ -325,11 +313,6 @@ var CreationScreen = function (_React$Component5) {
         null,
         React.createElement(CreationTitle, null),
         React.createElement(CreationCards, { inputId: "card-en-add", outputId: "card-tl-add" }),
-        React.createElement(
-          "div",
-          { className: "save-button" },
-          React.createElement(SaveButton, { inputId: "card-en-add", outputId: "card-tl-add" })
-        ),
         React.createElement(UsernameBar, { username: "Branny Buddy" })
       );
     }
