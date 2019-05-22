@@ -1,5 +1,3 @@
-node_modules/
-
 # emacs files
 .dir-locals.el
 
