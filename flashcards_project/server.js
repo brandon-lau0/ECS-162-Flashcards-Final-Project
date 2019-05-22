@@ -7,7 +7,7 @@ const http = require('http');
 const APIkey = "AIzaSyAt9g5D8RZEYrisegFBSwmVazNBn0I3tP0";  // Google Translate API Key
 const url = "https://translation.googleapis.com/language/translate/v2?key=" + APIkey
 
-const port = 3000
+const port = 54610
 const sqlite3 = require("sqlite3").verbose();  // use sqlite
 const fs = require("fs"); // file system
 const dbFileName = "Flashcards.db";
