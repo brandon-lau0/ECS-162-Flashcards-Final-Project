@@ -63,7 +63,7 @@ class CreationTitle extends React.Component {
 
 /*
  * Component for the English input and translation output cards with
- * button. lol whatever two items in one component
+ * button. Two items in one component
  */
 class CreationCards extends React.Component {
   constructor(props) {
@@ -96,7 +96,7 @@ class CreationCards extends React.Component {
           </span>
         </figure>
       </section>,
-      // TODO: what the fuck does key do
+      // TODO: what does key do?
       <div key="1" className="save-button">
         <button
           className="save-button helvetica white-fg green-bg"
@@ -110,11 +110,6 @@ class CreationCards extends React.Component {
 
   /*
    * Generates the inline styling for the input text.
-   *
-   * delet dis
-   *
-   * all this hard-coding
-   * you retarded noob programmer
    *
    * TODO: We probably have to generalize this in the future for the
    * review view.

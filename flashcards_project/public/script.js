@@ -96,7 +96,7 @@ var CreationTitle = function (_React$Component) {
 
 /*
  * Component for the English input and translation output cards with
- * button. lol whatever two items in one component
+ * button. Two items in one component
  */
 
 
@@ -123,6 +123,7 @@ var CreationCards = function (_React$Component2) {
     _this2.onKeyUp = function (_) {
       _this2.setState({ inputStyle: _this2.inputStyle() });
 
+      // it's okay to modify value, since it's not managed by react
       if (document.getElementById(_this2.props.inputId).value == "") {
         _this2.setState({ tlText: "" });
       }
@@ -177,7 +178,7 @@ var CreationCards = function (_React$Component2) {
           )
         )
       ),
-      // TODO: what the fuck does key do
+      // TODO: what does key do?
       React.createElement(
         "div",
         { key: "1", className: "save-button" },
@@ -194,11 +195,6 @@ var CreationCards = function (_React$Component2) {
 
     /*
      * Generates the inline styling for the input text.
-     *
-     * delet dis
-     *
-     * all this hard-coding
-     * you retarded noob programmer
      *
      * TODO: We probably have to generalize this in the future for the
      * review view.

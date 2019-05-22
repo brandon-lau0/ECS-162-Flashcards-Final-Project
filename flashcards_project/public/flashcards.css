@@ -164,7 +164,6 @@ figure.card-add {
 
 #card-en-add::placeholder {
   color: #969696;
-  /* firefox pls */
   opacity: 1;
 }
 
