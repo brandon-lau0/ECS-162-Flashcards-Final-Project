@@ -2,29 +2,52 @@
 const sqlite3 = require("sqlite3").verbose();  // use sqlite
 const fs = require("fs"); // file system
 
-const dbFileName = "Flashcards.db";
+const flashcardsDbFileName = "Flashcards.db";
+const userInfoDbFileName = "UserInfo.db";
+
 // makes the object that represents the database in our code
-const db = new sqlite3.Database(dbFileName,
+const flashcardDb = new sqlite3.Database(flashcardsDbFileName,
     (err) => {
         if(err) {
-            console.log("You did not create the database something is wrong", err);
+            console.log("Error occurred when creating the Flashcards Database object.", err);
         }
-        console.log("You successfully created the FlashCards database.");
+        console.log("You successfully created the FlashCards database object.");
     });  // object, not database.
 
 // Initialize table.
 // If the table already exists, causes an error.
 // Fix the error by removing or renaming Flashcards.db
-/**************************************CREATING TABLE *******************************/
-const cmdStr = 'CREATE TABLE Flashcards (user_id INT,english_text VARCHAR(500),trans_text VARCHAR(500), num_show INT, num_correct INT)';
-db.run(cmdStr,tableCreationCallback);
 
-function tableCreationCallback(err) {
+const userInfoDb = new sqlite3.Database(userInfoDbFileName,
+    (err) => {
+        if(err) {
+            console.log("Error occurred when creating the User Info Database object.", err);
+        }
+        console.log("You successfully created the User Info Database object.");
+    });
+
+/**************************************CREATING TABLE *******************************/
+const flashcardsCmdStr = 'CREATE TABLE Flashcards (user_id INT, english_text VARCHAR(500), trans_text VARCHAR(500), num_show INT, num_correct INT)';
+flashcardDb.run(flashcardsCmdStr, flashcardsTableCreationCallback);
+
+function flashcardsTableCreationCallback(err) {
   if (err) {
-   console.log("Table creation error you already created a table", err);
+   console.log("Flashcards Database Table creation error, you already created a table.", err);
   } else {
-    console.log("Database Table created");
-    db.close();
+    console.log("Flashcards Database Table successfully created.");
+    flashcardDb.close();
+  }
+}
+
+const userInfoCmdStr = 'CREATE TABLE UserInfo (google_id INT, first_name TEXT, last_name TEXT)';
+userInfoDb.run(userInfoCmdStr, userInfoTableCreationCallback);
+
+function userInfoTableCreationCallback(err) {
+  if (err) {
+    console.log("UserInfo Database Table creation error, you already created a table.", err)
+  } else {
+    console.log("UserInfo Database Table successfully created.");
+    userInfoDb.close();
   }
 }
 /***********************************END OF CREATING TABLE ***************************/
