@@ -10,6 +10,10 @@ main {
   width: 100%;
 }
 
+button {
+  border-radius: 0.75em;
+}
+
 section.title-add {
   flex: 1.3;
 

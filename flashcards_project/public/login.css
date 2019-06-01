@@ -7,48 +7,65 @@ main {
 }
 
 #login-screen-left {
-  flex: 45;
+  flex: 1;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
 
-  padding-left: 8%;
+  background-image: linear-gradient(to bottom right, #606b9b, #b191d4);
 }
 
 #login-title {
-  font-size: 2.7em;
+  font-size: 3.4em;
+  font-weight: 900;
+  line-height: 1.2;
+
+  padding-left: 15%;
+  padding-right: 15%;
+  margin-bottom: 5%;
 }
 
 #login-subtitle {
-  font-size: 1.4em;
+  font-size: 1.6em;
+  font-weight: 300;
+
+  padding-left: 15%;
+  padding-right: 15%;
 }
 
 #login-screen-right {
-  flex: 55;
+  flex: 1;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
-#login-prompt {
-  display: flex;
-  flex-direction: column;
-
-  padding-left: 20%;
-  padding-right: 20%;
-}
-
-#signin-text {
-  font-size: 2.1em;
-}
-
-input.login {
-  padding-left: 0.6em;
-  font-size: 1em;
-}
-
+/* we can just hardcode everything for the login button */
 #login-button {
-  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+
+  width: 15em;
+
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#google-icon {
+  width: 2em;
+  height: 2em;
+
+  margin-left: 0.6em;
+  margin-right: 0.8em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.login-text {
+  font-size: 1.2em;
+
+  margin-top: 0.8em;
 }

@@ -6,6 +6,7 @@
     <title>Lango!</title>
 
     <link rel="stylesheet" type="text/css" href="reset.css" />
+    <link rel="stylesheet" type="text/css" href="common.css" />
     <link rel="stylesheet" type="text/css" href="login.css" />
     <link
       href="https://fonts.googleapis.com/css?family=Raleway:400,900"
@@ -18,15 +19,23 @@
   </head>
   <body>
     <main>
-      <section id="login-screen-left" class="purple-bg">
-        <section id="login-title" class="white-fg raleway">
+      <section id="login-screen-left" class="dark-purple-bg">
+        <div id="login-title" class="white-fg raleway">
           Welcome to Lango!
-        </section>
-        <section id="login-subtitle" class="green-fg">
+        </div>
+        <div id="login-subtitle" class="green-fg open-sans">
           Customize your vocabulary
-        </section>
+        </div>
       </section>
-      <section id="login-screen-right"></section>
+      <section id="login-screen-right">
+        <button id="login-button" class="green-bg" onclick="login()">
+          <img id="google-icon" src="serveimage.png" />
+          <div class="login-text white-fg helvetica">
+            Log in with Google
+          </div>
+        </button>
+      </section>
     </main>
+    <script src="login.js"></script>
   </body>
 </html>

@@ -7,10 +7,6 @@ body {
   padding: 0;
 }
 
-button {
-  border-radius: 0.75em;
-}
-
 .green-bg {
   background-color: #70c7a9;
 }
@@ -19,7 +15,6 @@ button {
   color: #70c7a9;
 }
 
-/* FIXME: way too dark */
 .grey-bg {
   background-color: #969696;
 }
