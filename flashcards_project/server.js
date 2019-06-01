@@ -10,10 +10,11 @@ const url = "https://translation.googleapis.com/language/translate/v2?key=" + AP
 const port = 54610;
 const sqlite3 = require("sqlite3").verbose();  // use sqlite
 const fs = require("fs"); // file system
-const dbFileName = "Flashcards.db";
+const flashcardsDbFileName = "Flashcards.db";
+const userInfoDbFileName = "UserInfo.db";
 
 /***************OPEN THE DATABASE *********************/
-const db = new sqlite3.Database(dbFileName, sqlite3.OPEN_READWRITE,
+const db = new sqlite3.Database(flashcardsDbFileName, sqlite3.OPEN_READWRITE,
     (err) => {
         if(err) {
             console.log("you do not connected to the database something is wrong!");
