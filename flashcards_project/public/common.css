@@ -1,0 +1,61 @@
+body {
+  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  border-radius: 0.75em;
+}
+
+.green-bg {
+  background-color: #70c7a9;
+}
+
+.green-fg {
+  color: #70c7a9;
+}
+
+/* FIXME: way too dark */
+.grey-bg {
+  background-color: #969696;
+}
+
+.grey-fg {
+  color: #969696;
+}
+
+.dark-purple-bg {
+  background-color: #606b9b;
+}
+
+.dark-purple-fg {
+  color: #606b9b;
+}
+
+.white-bg {
+  background-color: #ffffff;
+}
+
+.white-fg {
+  color: #ffffff;
+}
+
+.black-fg {
+  color: #000000;
+}
+
+.raleway {
+  font-family: "Raleway", sans-serif;
+}
+
+.open-sans {
+  font-family: "Open Sans", sans-serif;
+}
+
+.helvetica {
+  font-family: helvetica, "angry font >:(";
+}
