@@ -14,12 +14,12 @@ const flashcardsDbFileName = "Flashcards.db";
 const userInfoDbFileName = "UserInfo.db";
 
 /***************OPEN THE DATABASE *********************/
-const db = new sqlite3.Database(flashcardsDbFileName, sqlite3.OPEN_READWRITE,
+const flashcardDb = new sqlite3.Database(flashcardsDbFileName, sqlite3.OPEN_READWRITE,
     (err) => {
         if(err) {
-            console.log("you do not connected to the database something is wrong!");
+            console.log("Could not connect to Flashcards Database, something is wrong!");
         }
-        console.log("you successfully connected to the FlashCards database.")
+        console.log("Successfully connected to the FlashCards database.")
     });
 
 function queryHandler(req, res, next) {
@@ -31,7 +31,7 @@ function queryHandler(req, res, next) {
 
 
   if (qObj.english != undefined) {
-      db.run(`INSERT INTO Flashcards(user_id,
+      flashcardDb.run(`INSERT INTO Flashcards(user_id,
                                          english_text,
                                          trans_text,
                                          num_show,
