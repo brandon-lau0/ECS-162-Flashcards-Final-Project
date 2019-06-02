@@ -157,7 +157,7 @@ class CreationCards extends React.Component {
       </section>,
       <div key="1" className="save-button">
         <button
-          className="save-button helvetica white-fg green-bg"
+          className="action-button helvetica white-fg green-bg"
           onClick={this.onClick}
         >
           Save
@@ -245,11 +245,12 @@ class CreationCards extends React.Component {
 ///////////////////////////////////////////////////////////////////////////////
 //                                Review Page                                //
 ///////////////////////////////////////////////////////////////////////////////
-import { FlipCard } from "./flip-card.jsx";
+// import { FlipCard } from "./flip-card.jsx";
 // TODO is above jsx or js?
 
 /*
  * Component for review cards + button.
+ * TODO flip card on enter
  */
 class ReviewCards extends React.Component {
   // PROPS should contain textId and inputId
@@ -268,7 +269,7 @@ class ReviewCards extends React.Component {
         </figure>
         <figure className="card-review">
           <textarea
-            // TODO allow scrolling
+            // scrolls by default
             id={this.props.inputId}
             className="helvetica"
             type="text"
@@ -276,6 +277,14 @@ class ReviewCards extends React.Component {
             onKeyDown={this.onKeyDown}
           />
         </figure>
+        <div className="next-button">
+          <button
+            className="action-button helvetica white-fg green-bg"
+            onClick={this.onClick}
+          >
+            Next
+          </button>
+        </div>
       </section>
     );
   }
@@ -332,7 +341,7 @@ class MainScreen extends React.Component {
           }
         />
         {this.state.reviewing ? (
-          <div todo="TODO" />
+          <ReviewCards textId="card-tl-review" inputId="card-en-review" />
         ) : (
           <CreationCards inputId="card-en-add" outputId="card-tl-add" />
         )}

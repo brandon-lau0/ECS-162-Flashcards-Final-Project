@@ -133,7 +133,20 @@ div.save-button {
   padding-right: 15%;
 }
 
-button.save-button {
+div.next-button {
+  flex: 1.2;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: start;
+
+  padding-top: 5%;
+  /* sum of margins of cards and padding of outer container */
+  padding-left: 15%;
+  padding-right: 15%;
+}
+
+button.action-button {
   font-size: 1em;
 
   padding: 0.5em;
@@ -141,7 +154,7 @@ button.save-button {
   padding-right: 1.6em;
 }
 
-button.save-button:hover {
+button.action-button:hover {
   cursor: pointer;
 }
 
@@ -207,7 +220,7 @@ aside.user-add {
     padding-right: 15.5%;
   }
 
-  button.save-button {
+  button.action-button {
     padding-left: 2em;
     padding-right: 2em;
   }

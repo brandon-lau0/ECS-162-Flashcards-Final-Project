@@ -272,7 +272,7 @@ var CreationCards = function (_React$Component4) {
         React.createElement(
           "button",
           {
-            className: "save-button helvetica white-fg green-bg",
+            className: "action-button helvetica white-fg green-bg",
             onClick: this.onClick
           },
           "Save"
@@ -339,14 +339,14 @@ var CreationCards = function (_React$Component4) {
 ///////////////////////////////////////////////////////////////////////////////
 //                                Review Page                                //
 ///////////////////////////////////////////////////////////////////////////////
-
-
-import { FlipCard } from "./flip-card.jsx";
+// import { FlipCard } from "./flip-card.jsx";
 // TODO is above jsx or js?
 
 /*
  * Component for review cards + button.
+ * TODO flip card on enter
  */
+
 
 var ReviewCards = function (_React$Component5) {
   _inherits(ReviewCards, _React$Component5);
@@ -390,13 +390,25 @@ var ReviewCards = function (_React$Component5) {
           "figure",
           { className: "card-review" },
           React.createElement("textarea", {
-            // TODO allow scrolling
+            // scrolls by default
             id: this.props.inputId,
             className: "helvetica",
             type: "text",
             placeholder: "Translation",
             onKeyDown: this.onKeyDown
           })
+        ),
+        React.createElement(
+          "div",
+          { className: "next-button" },
+          React.createElement(
+            "button",
+            {
+              className: "action-button helvetica white-fg green-bg",
+              onClick: this.onClick
+            },
+            "Next"
+          )
         )
       );
     }
@@ -462,7 +474,7 @@ var MainScreen = function (_React$Component6) {
           buttonOnClick: this.buttonOnClick,
           paddingClass: this.state.reviewing ? "titlebar-review-padding" : "titlebar-add-padding"
         }),
-        this.state.reviewing ? React.createElement("div", { todo: "TODO" }) : React.createElement(CreationCards, { inputId: "card-en-add", outputId: "card-tl-add" }),
+        this.state.reviewing ? React.createElement(ReviewCards, { textId: "card-tl-review", inputId: "card-en-review" }) : React.createElement(CreationCards, { inputId: "card-en-add", outputId: "card-tl-add" }),
         React.createElement(UsernameBar, { username: "Branny Buddy" })
       );
     }
