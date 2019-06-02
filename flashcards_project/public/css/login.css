@@ -1,23 +1,26 @@
 main {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 
   height: 100%;
   width: 100%;
 }
 
+/* actually the top for mobile and tablet, but i didn't plan out the
+   name well enough */
 #login-screen-left {
-  flex: 1;
+  flex: 3;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
 
   background-image: linear-gradient(to bottom right, #606b9b, #b191d4);
+  box-shadow: 0px 30px 40px #bbbbbb;
 }
 
 #login-title {
-  font-size: 3.4em;
+  font-size: 2.6em;
   font-weight: 900;
   line-height: 1.2;
 
@@ -27,13 +30,14 @@ main {
 }
 
 #login-subtitle {
-  font-size: 1.6em;
+  font-size: 1.3em;
   font-weight: 300;
 
   padding-left: 15%;
   padding-right: 15%;
 }
 
+/* actually bottom for mobile and tablet lol */
 #login-screen-right {
   flex: 1;
 
@@ -41,6 +45,7 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-bottom: 3%;
 }
 
 /* we can just hardcode everything for the login button */
@@ -68,4 +73,54 @@ main {
   font-size: 1.2em;
 
   margin-top: 0.8em;
+}
+
+@media only screen and (min-width: 481px) and (max-width: 800px) {
+  #login-title {
+    font-size: 3.7em;
+    line-height: 1.2;
+
+    padding-left: 25%;
+    padding-right: 25%;
+    margin-bottom: 5%;
+  }
+
+  #login-subtitle {
+    font-size: 1.6em;
+
+    padding-left: 25%;
+    padding-right: 25%;
+  }
+}
+
+@media only screen and (min-width: 801px) {
+  main {
+    flex-direction: row;
+  }
+
+  #login-screen-left {
+    flex: 1;
+    box-shadow: 30px 0px 40px #bbbbbb;
+  }
+
+  #login-title {
+    font-size: 3.4em;
+    line-height: 1.2;
+
+    padding-left: 15%;
+    padding-right: 15%;
+    margin-bottom: 5%;
+  }
+
+  #login-subtitle {
+    font-size: 1.6em;
+
+    padding-left: 15%;
+    padding-right: 15%;
+  }
+
+  #login-screen-right {
+    flex: 1;
+    padding-bottom: 0%;
+  }
 }

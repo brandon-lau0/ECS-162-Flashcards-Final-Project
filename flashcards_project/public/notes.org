@@ -1,2 +1,3 @@
 - Reference desktop seems to be 950px by 550px;
 - Reference tablet seems to be iPad (lmao same my ass).
+- Reference mobile seems to be 300px by 540px.
