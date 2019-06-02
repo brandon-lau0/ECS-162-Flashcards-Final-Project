@@ -34,7 +34,7 @@ div.title-add-format {
   align-items: flex-start;
 }
 
-#review-button {
+#top-button {
   justify-self: left;
 
   font-size: 0.9em;
@@ -44,7 +44,7 @@ div.title-add-format {
   padding-right: 0.5em;
 }
 
-#review-button:hover {
+#top-button:hover {
   cursor: pointer;
 }
 
@@ -157,7 +157,7 @@ aside.user-add {
     padding-right: 4%;
   }
 
-  #review-button {
+  #top-button {
     font-size: 1em;
 
     padding-left: 2em;
@@ -214,7 +214,7 @@ aside.user-add {
       padding-right: 5%;
     }
 
-    #review-button {
+    #top-button {
       padding-left: 1em;
       padding-right: 1em;
     }
