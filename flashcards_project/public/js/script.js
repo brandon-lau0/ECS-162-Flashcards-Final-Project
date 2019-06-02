@@ -46,7 +46,7 @@ var TopButton = function (_React$Component) {
 var TitleBar = function (_React$Component2) {
   _inherits(TitleBar, _React$Component2);
 
-  // PROPS should contain buttonText and onClick
+  // PROPS should contain buttonText, onClick, and horizontal padding class
   function TitleBar(props) {
     _classCallCheck(this, TitleBar);
 
@@ -56,23 +56,26 @@ var TitleBar = function (_React$Component2) {
   _createClass(TitleBar, [{
     key: "render",
     value: function render() {
-      return React.createElement(
-        "section",
-        { className: "title-add" },
+      return (
+        // since the padding changes between views
         React.createElement(
-          "div",
-          { className: "title-add-format" },
-          React.createElement(TopButton, {
-            text: this.props.buttonText,
-            onClick: this.props.onClick
-          })
-        ),
-        React.createElement(
-          "h3",
-          { className: "raleway dark-purple-fg" },
-          "Lango!"
-        ),
-        React.createElement("div", { className: "title-add-format" })
+          "section",
+          { className: "titlebar " + this.props.paddingClass },
+          React.createElement(
+            "div",
+            { className: "titlebar-format" },
+            React.createElement(TopButton, {
+              text: this.props.buttonText,
+              onClick: this.props.buttonOnClick
+            })
+          ),
+          React.createElement(
+            "h3",
+            { className: "raleway dark-purple-fg" },
+            "Lango!"
+          ),
+          React.createElement("div", { className: "titlebar-format" })
+        )
       );
     }
   }]);
@@ -177,7 +180,11 @@ function saveCard(en, tl) {
 
 /*
  * Component for the English input and translation output cards with
- * button. Two items in one component
+ * button. Two items in one component.
+ *
+ * We could've extracted the button into a separate component, but
+ * I decided it would be too much effort, even though that would give
+ * us less React/CSS duplication and cleaner code.
  */
 
 var CreationCards = function (_React$Component4) {
@@ -232,7 +239,9 @@ var CreationCards = function (_React$Component4) {
       // show grey if no input
       var tlColor = input && this.state.tlText ? "black-fg" : "grey-fg";
 
-      return [React.createElement(
+      return [
+      // we could've used a wrapper instead of an array, but it's too late now
+      React.createElement(
         "section",
         { key: "0", className: "card-add" },
         React.createElement(
@@ -328,6 +337,97 @@ var CreationCards = function (_React$Component4) {
 }(React.Component);
 
 ///////////////////////////////////////////////////////////////////////////////
+//                                Review Page                                //
+///////////////////////////////////////////////////////////////////////////////
+
+
+import { FlipCard } from "./flip-card.jsx";
+// TODO is above jsx or js?
+
+/*
+ * Component for review cards + button.
+ */
+
+var ReviewCards = function (_React$Component5) {
+  _inherits(ReviewCards, _React$Component5);
+
+  // PROPS should contain textId and inputId
+  function ReviewCards(props) {
+    _classCallCheck(this, ReviewCards);
+
+    var _this6 = _possibleConstructorReturn(this, (ReviewCards.__proto__ || Object.getPrototypeOf(ReviewCards)).call(this, props));
+
+    _this6.onKeyDown = function (event) {
+      if (event.key == "Enter") {
+        var input = document.getElementById(_this6.props.inputId).value;
+
+        event.preventDefault();
+
+        // TODO
+      }
+    };
+
+    _this6.state = { card: undefined };
+    return _this6;
+  }
+
+  _createClass(ReviewCards, [{
+    key: "render",
+    value: function render() {
+      return React.createElement(
+        "section",
+        { className: "card-review" },
+        React.createElement(
+          "figure",
+          { className: "card-review" },
+          React.createElement(
+            "span",
+            { id: this.props.textId },
+            this.state.card ? this.state.card.chinese : "Loading..."
+          )
+        ),
+        React.createElement(
+          "figure",
+          { className: "card-review" },
+          React.createElement("textarea", {
+            // TODO allow scrolling
+            id: this.props.inputId,
+            className: "helvetica",
+            type: "text",
+            placeholder: "Translation",
+            onKeyDown: this.onKeyDown
+          })
+        )
+      );
+    }
+
+    /*
+     * Requests a card from the server.
+     */
+
+  }, {
+    key: "requestCard",
+    value: function requestCard() {
+      var _this7 = this;
+
+      var request = new XMLHttpRequest();
+      // TODO change url if branny & andy use a different one
+      request.open("GET", "/card", true);
+      request.onload = function () {
+        var response = JSON.parse(request.responseText);
+        _this7.setState({ card: response });
+      };
+      request.onerror = function () {
+        return alert("There was an error requesting a card.");
+      };
+      request.send();
+    }
+  }]);
+
+  return ReviewCards;
+}(React.Component);
+
+///////////////////////////////////////////////////////////////////////////////
 //                                   Final                                   //
 ///////////////////////////////////////////////////////////////////////////////
 /*
@@ -335,29 +435,42 @@ var CreationCards = function (_React$Component4) {
  */
 
 
-var CreationScreen = function (_React$Component5) {
-  _inherits(CreationScreen, _React$Component5);
+var MainScreen = function (_React$Component6) {
+  _inherits(MainScreen, _React$Component6);
 
-  function CreationScreen(props) {
-    _classCallCheck(this, CreationScreen);
+  function MainScreen(props) {
+    _classCallCheck(this, MainScreen);
 
-    return _possibleConstructorReturn(this, (CreationScreen.__proto__ || Object.getPrototypeOf(CreationScreen)).call(this, props));
+    var _this8 = _possibleConstructorReturn(this, (MainScreen.__proto__ || Object.getPrototypeOf(MainScreen)).call(this, props));
+
+    _this8.buttonOnClick = function () {
+      _this8.setState({ reviewing: !_this8.state.reviewing });
+    };
+
+    _this8.state = { reviewing: false };
+    return _this8;
   }
 
-  _createClass(CreationScreen, [{
+  _createClass(MainScreen, [{
     key: "render",
     value: function render() {
       return React.createElement(
         "main",
         null,
-        React.createElement(TitleBar, { buttonText: "Start Review" }),
-        React.createElement(CreationCards, { inputId: "card-en-add", outputId: "card-tl-add" }),
+        React.createElement(TitleBar, {
+          buttonText: this.state.reviewing ? "Add" : "Start Review",
+          buttonOnClick: this.buttonOnClick,
+          paddingClass: this.state.reviewing ? "titlebar-review-padding" : "titlebar-add-padding"
+        }),
+        this.state.reviewing ? React.createElement("div", { todo: "TODO" }) : React.createElement(CreationCards, { inputId: "card-en-add", outputId: "card-tl-add" }),
         React.createElement(UsernameBar, { username: "Branny Buddy" })
       );
     }
   }]);
 
-  return CreationScreen;
+  return MainScreen;
 }(React.Component);
 
-ReactDOM.render(React.createElement(CreationScreen, null), document.getElementById("root"));
+ReactDOM.render(React.createElement(MainScreen, null), document.getElementById("root"));
+
+// TODO card style can be generalized

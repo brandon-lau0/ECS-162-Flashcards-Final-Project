@@ -25,22 +25,23 @@ class TopButton extends React.Component {
  * No updates needed for this one.
  */
 class TitleBar extends React.Component {
-  // PROPS should contain buttonText and onClick
+  // PROPS should contain buttonText, onClick, and horizontal padding class
   constructor(props) {
     super(props);
   }
 
   render() {
     return (
-      <section className="title-add">
-        <div className="title-add-format">
+      // since the padding changes between views
+      <section className={`titlebar ${this.props.paddingClass}`}>
+        <div className="titlebar-format">
           <TopButton
             text={this.props.buttonText}
-            onClick={this.props.onClick}
+            onClick={this.props.buttonOnClick}
           />
         </div>
         <h3 className="raleway dark-purple-fg">Lango!</h3>
-        <div className="title-add-format" />
+        <div className="titlebar-format" />
       </section>
     );
   }
@@ -116,7 +117,11 @@ function saveCard(en, tl) {
 
 /*
  * Component for the English input and translation output cards with
- * button. Two items in one component
+ * button. Two items in one component.
+ *
+ * We could've extracted the button into a separate component, but
+ * I decided it would be too much effort, even though that would give
+ * us less React/CSS duplication and cleaner code.
  */
 class CreationCards extends React.Component {
   constructor(props) {
@@ -131,6 +136,7 @@ class CreationCards extends React.Component {
     const tlColor = input && this.state.tlText ? "black-fg" : "grey-fg";
 
     return [
+      // we could've used a wrapper instead of an array, but it's too late now
       <section key="0" className="card-add">
         <figure className="card-add">
           <textarea
@@ -237,25 +243,110 @@ class CreationCards extends React.Component {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+//                                Review Page                                //
+///////////////////////////////////////////////////////////////////////////////
+import { FlipCard } from "./flip-card.jsx";
+// TODO is above jsx or js?
+
+/*
+ * Component for review cards + button.
+ */
+class ReviewCards extends React.Component {
+  // PROPS should contain textId and inputId
+  constructor(props) {
+    super(props);
+    this.state = { card: undefined };
+  }
+
+  render() {
+    return (
+      <section className="card-review">
+        <figure className="card-review">
+          <span id={this.props.textId}>
+            {this.state.card ? this.state.card.chinese : "Loading..."}
+          </span>
+        </figure>
+        <figure className="card-review">
+          <textarea
+            // TODO allow scrolling
+            id={this.props.inputId}
+            className="helvetica"
+            type="text"
+            placeholder="Translation"
+            onKeyDown={this.onKeyDown}
+          />
+        </figure>
+      </section>
+    );
+  }
+
+  /*
+   * Requests a card from the server.
+   */
+  requestCard() {
+    let request = new XMLHttpRequest();
+    // TODO change url if branny & andy use a different one
+    request.open("GET", "/card", true);
+    request.onload = () => {
+      let response = JSON.parse(request.responseText);
+      this.setState({ card: response });
+    };
+    request.onerror = () => alert("There was an error requesting a card.");
+    request.send();
+  }
+
+  onKeyDown = event => {
+    if (event.key == "Enter") {
+      const input = document.getElementById(this.props.inputId).value;
+
+      event.preventDefault();
+
+      // TODO
+    }
+  };
+}
+
+///////////////////////////////////////////////////////////////////////////////
 //                                   Final                                   //
 ///////////////////////////////////////////////////////////////////////////////
 /*
  * Component for the entire creation screen.
  */
-class CreationScreen extends React.Component {
+class MainScreen extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = { reviewing: false };
   }
 
   render() {
     return (
       <main>
-        <TitleBar buttonText="Start Review" />
-        <CreationCards inputId="card-en-add" outputId="card-tl-add" />
+        <TitleBar
+          buttonText={this.state.reviewing ? "Add" : "Start Review"}
+          buttonOnClick={this.buttonOnClick}
+          paddingClass={
+            this.state.reviewing
+              ? "titlebar-review-padding"
+              : "titlebar-add-padding"
+          }
+        />
+        {this.state.reviewing ? (
+          <div todo="TODO" />
+        ) : (
+          <CreationCards inputId="card-en-add" outputId="card-tl-add" />
+        )}
+
         <UsernameBar username="Branny Buddy" />
       </main>
     );
   }
+
+  buttonOnClick = () => {
+    this.setState({ reviewing: !this.state.reviewing });
+  };
 }
 
-ReactDOM.render(<CreationScreen />, document.getElementById("root"));
+ReactDOM.render(<MainScreen />, document.getElementById("root"));
+
+// TODO card style can be generalized
