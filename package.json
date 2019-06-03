@@ -1,0 +1,25 @@
+{
+  "name": "ECS-162-Flashcards-Final-Project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-react-app": "^3.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brandon-lau0/ECS-162-Flashcards-Final-Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brandon-lau0/ECS-162-Flashcards-Final-Project/issues"
+  },
+  "homepage": "https://github.com/brandon-lau0/ECS-162-Flashcards-Final-Project#readme"
+}

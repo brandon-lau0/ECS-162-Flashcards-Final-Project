@@ -107,7 +107,12 @@ function translateTextHandler(req, res, next) {
 }
 
 function usernameHandler(req, res) {
-  let user_name = req.userData.first_name + req.userData.last_name;
+
+  // console.log("This is Request!!!!: ", req)
+  console.log("This is userData in the USERNAME HANDLER: ", req.user)
+  console.log("This is userData in the USERNAME HANDLER: ", req.user.firstName)
+  console.log("This is userData in the USERNAME HANDLER: ", req.user.lastName)
+  let user_name = req.user.firstName + req.user.lastName;
 
   res.json({username: user_name});
 }
@@ -140,12 +145,6 @@ const googleLoginData = {
 // to Google for the user's profile information.
 // It will get used much later in the pipeline. 
 passport.use( new GoogleStrategy(googleLoginData, gotProfile) );
-
-
-
-
-
-
 
 
 // Put together the server pipeline
@@ -370,12 +369,20 @@ passport.deserializeUser((dbRowID, done) => {
             last_name: 'LastName' 
           }
         */
-
+        console.log("this is rowData.google_id", rowData.google_id);
+        console.log("this is rowData.first_name", rowData.first_name);
+        console.log("this is rowData.last_name", rowData.last_name);
+        console.log("this is rowData", rowData);
         let userData = {
-          google_id: rowData.google_id,
-          first_name: rowData.first_name,
-          last_name: rowData.last_name
+          "google_id": rowData.google_id,
+          "firstName": rowData.first_name,
+          "lastName": rowData.last_name
         };
+        console.log("*****************************************");
+        console.log("this is userData ", userData);
+        console.log("this is userData.google_id", userData.google_id);
+        console.log("this is UserData.firstName", userData.firstNname);
+        console.log("this is UserData.lastName", userData.lastName);
 
 	      done(null, userData);
       }
