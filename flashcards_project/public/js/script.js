@@ -462,7 +462,6 @@ var ReviewCard = function (_React$Component7) {
 }(React.Component);
 /*
  * Component for review cards + button.
- * TODO: flip card on enter and on top card click
  */
 
 
@@ -481,9 +480,8 @@ var ReviewCards = function (_React$Component8) {
       if (event.key == "Enter") {
         event.preventDefault();
 
-        // TODO: uncomment
         _this9.setState({ flipped: true });
-        // this.sendResult();
+        _this9.sendResult();
       }
     };
 
@@ -630,15 +628,14 @@ var MainScreen = function (_React$Component9) {
   function MainScreen(props) {
     _classCallCheck(this, MainScreen);
 
-    // TODO: uncomment
-    // this.state = { reviewing: false };
     var _this11 = _possibleConstructorReturn(this, (MainScreen.__proto__ || Object.getPrototypeOf(MainScreen)).call(this, props));
 
     _this11.buttonOnClick = function () {
       _this11.setState({ reviewing: !_this11.state.reviewing });
     };
 
-    _this11.state = { reviewing: true };
+    _this11.state = { reviewing: false };
+    // this.state = { reviewing: true };
     return _this11;
   }
 
@@ -675,5 +672,3 @@ var MainScreen = function (_React$Component9) {
 }(React.Component);
 
 ReactDOM.render(React.createElement(MainScreen, null), document.getElementById("root"));
-
-// TODO: card style can be generalized

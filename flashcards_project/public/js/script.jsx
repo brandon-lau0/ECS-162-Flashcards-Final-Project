@@ -323,7 +323,6 @@ class ReviewCard extends React.Component {
 }
 /*
  * Component for review cards + button.
- * TODO: flip card on enter and on top card click
  */
 class ReviewCards extends React.Component {
   // PROPS should contain textId and inputId
@@ -428,9 +427,8 @@ class ReviewCards extends React.Component {
     if (event.key == "Enter") {
       event.preventDefault();
 
-      // TODO: uncomment
       this.setState({ flipped: true });
-      // this.sendResult();
+      this.sendResult();
     }
   };
 
@@ -453,9 +451,8 @@ class MainScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    // TODO: uncomment
-    // this.state = { reviewing: false };
-    this.state = { reviewing: true };
+    this.state = { reviewing: false };
+    // this.state = { reviewing: true };
   }
 
   componentDidMount() {
@@ -497,5 +494,3 @@ class MainScreen extends React.Component {
 }
 
 ReactDOM.render(<MainScreen />, document.getElementById("root"));
-
-// TODO: card style can be generalized

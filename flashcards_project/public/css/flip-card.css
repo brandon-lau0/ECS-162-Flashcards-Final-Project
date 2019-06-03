@@ -92,7 +92,6 @@ h2 {
 /*- Back side -*/
 .side-back {
   z-index: 2;
-  /* TODO: this conflicts and causes not full screen  */
   /* padding: 32px; */
   text-align: center;
   -webkit-transform: rotateY(180deg);
