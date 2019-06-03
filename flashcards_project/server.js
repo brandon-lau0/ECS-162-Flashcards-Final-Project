@@ -112,7 +112,7 @@ function usernameHandler(req, res) {
   console.log("This is user in the USERNAME HANDLER: ", req.user)
   console.log("This is user.FirstName in the USERNAME HANDLER: ", req.user.firstName)
   console.log("This is user.LastName in the USERNAME HANDLER: ", req.user.lastName)
-  let user_name = req.user.firstName + req.user.lastName;
+  let user_name = req.user.firstName + " " + req.user.lastName;
 
   res.json({username: user_name});
 }
