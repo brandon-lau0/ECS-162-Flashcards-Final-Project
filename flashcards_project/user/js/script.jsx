@@ -63,7 +63,7 @@ class UsernameBar extends React.Component {
 
   componentDidMount() {
     let request = new XMLHttpRequest();
-    request.open("GET", "username", true);
+    request.open("GET", "/username", true);
 
     request.onload = () => {
       let response = JSON.parse(request.responseText);
@@ -95,7 +95,7 @@ class UsernameBar extends React.Component {
  */
 function requestTranslation(text, callback) {
   let request = new XMLHttpRequest();
-  request.open("GET", `translate?english=${text}`, true);
+  request.open("GET", `/translate?english=${text}`, true);
 
   request.onload = () => callback(JSON.parse(request.responseText).Chinese);
   request.onerror = () =>
@@ -110,7 +110,7 @@ function requestTranslation(text, callback) {
  */
 function saveCard(en, tl) {
   let request = new XMLHttpRequest();
-  request.open("POST", `store?english=${en}&chinese=${tl}`, true);
+  request.open("POST", `/store?english=${en}&chinese=${tl}`, true);
 
   request.onerror = () => alert("There was an error with saving the card.");
 
@@ -408,7 +408,7 @@ class ReviewCards extends React.Component {
     let request = new XMLHttpRequest();
     request.open(
       "POST",
-      `update?card=${this.state.card.identifier}&result=${this.correct()}`,
+      `/update?card=${this.state.card.identifier}&result=${this.correct()}`,
       true
     );
     request.onload = () => undefined;
