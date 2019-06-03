@@ -1,2 +1,2 @@
 #!/usr/bin/sh
-npx babel public --presets react-app/prod --extensions ".jsx" public --watch --out-dir public
+npx babel user --presets react-app/prod --extensions ".jsx" user --watch --out-dir user
