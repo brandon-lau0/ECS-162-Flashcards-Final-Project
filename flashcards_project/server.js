@@ -108,7 +108,7 @@ function translateTextHandler(req, res, next) {
 
 function usernameHandler(req, res) {
 
-  // console.log("This is Request!!!!: ", req)
+  //console.log("This is Request!!!!: ", req)
   console.log("This is user in the USERNAME HANDLER: ", req.user)
   console.log("This is user.FirstName in the USERNAME HANDLER: ", req.user.firstName)
   console.log("This is user.LastName in the USERNAME HANDLER: ", req.user.lastName)
@@ -116,6 +116,32 @@ function usernameHandler(req, res) {
 
   res.json({username: user_name});
 }
+
+function hasCardHandler(req,res) {
+
+  console.log("this is req ", req);
+  console.log("this is googleId ", req.user.google_id);
+
+  let searchCmdStr = `SELECT count(google_id) FROM Flashcards WHERE google_id = ${req.user.google_id}`;
+    flashcardDb.get(searchCmdStr, getUserInfoCallback);
+
+    function getUserInfoCallback(err, rowData) {
+      if (err) {
+        console.log("Error occurred in getUserInfoCallback function. Error is:", err);
+      } else {
+        console.log("Successfully retrieved user info from database. Received:", rowData);
+        let x;
+        if (rowData["count(google_id)"] > 0){
+           x = "True";
+        } else {
+           x = "False";
+        }
+        res.json({"hasCard": x});
+    }
+}
+}
+
+
 
 function fileNotFound(req, res) {
     let url = req.url;
@@ -236,6 +262,7 @@ app.get('/user/*',
        ); 
 
 app.get('/username', usernameHandler);
+app.get('/hascards', hasCardHandler);
 app.get('/translate', translateTextHandler);
 app.post('/store', queryHandler);   // if not, is it a valid query?
 app.use( fileNotFound );            // otherwise not found
