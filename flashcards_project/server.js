@@ -108,7 +108,7 @@ function translateTextHandler(req, res, next) {
 
 function usernameHandler(req, res) {
   let user_name = req.userData.first_name + req.userData.last_name;
-
+  
   res.json({username: user_name});
 }
 
