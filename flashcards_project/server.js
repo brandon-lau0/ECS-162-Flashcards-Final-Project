@@ -253,7 +253,7 @@ function isAuthenticated(req, res, next) {
   console.log("Req.user:",req.user);
   next();
     } else {
-  res.redirect('/public/login.html');  // send response telling
+  res.redirect('/login.html');  // send response telling
   // Browser to go to login page
     }
 }
@@ -365,8 +365,13 @@ passport.deserializeUser((dbRowID, done) => {
           }
         */
 
-        //let userData = {userData: "data from db row goes here"};
-        done(null, rowData);
+        let userData = {
+          google_id: rowData.google_id,
+          first_name: rowData.first_name,
+          last_name: rowData.last_name
+        };
+
+	      done(null, userData);
       }
     }
 
