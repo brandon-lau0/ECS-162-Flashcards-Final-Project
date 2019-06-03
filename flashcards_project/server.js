@@ -106,6 +106,12 @@ function translateTextHandler(req, res, next) {
   }
 }
 
+function usernameHandler(req, res) {
+  let user_name = req.userData.first_name + req.userData.last_name;
+
+  res.json({username: user_name});
+}
+
 function fileNotFound(req, res) {
     let url = req.url;
     res.type('text/plain');
@@ -231,6 +237,7 @@ app.get('/user/*',
 
 
 app.use(express.static('public'));  // can I find a static file?
+app.get('/username', usernameHandler);
 app.get('/translate', translateTextHandler);
 app.post('/store', queryHandler);   // if not, is it a valid query?
 app.use( fileNotFound );            // otherwise not found
