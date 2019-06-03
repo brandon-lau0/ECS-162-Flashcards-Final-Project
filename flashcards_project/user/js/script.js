@@ -111,7 +111,7 @@ var UsernameBar = function (_React$Component3) {
       var _this4 = this;
 
       var request = new XMLHttpRequest();
-      request.open("GET", "username", true);
+      request.open("GET", "/username", true);
 
       request.onload = function () {
         var response = JSON.parse(request.responseText);
@@ -153,7 +153,7 @@ var UsernameBar = function (_React$Component3) {
 
 function requestTranslation(text, callback) {
   var request = new XMLHttpRequest();
-  request.open("GET", "translate?english=" + text, true);
+  request.open("GET", "/translate?english=" + text, true);
 
   request.onload = function () {
     return callback(JSON.parse(request.responseText).Chinese);
@@ -171,7 +171,7 @@ function requestTranslation(text, callback) {
  */
 function saveCard(en, tl) {
   var request = new XMLHttpRequest();
-  request.open("POST", "store?english=" + en + "&chinese=" + tl, true);
+  request.open("POST", "/store?english=" + en + "&chinese=" + tl, true);
 
   request.onerror = function () {
     return alert("There was an error with saving the card.");
@@ -590,7 +590,7 @@ var ReviewCards = function (_React$Component8) {
     key: "sendResult",
     value: function sendResult() {
       var request = new XMLHttpRequest();
-      request.open("POST", "update?card=" + this.state.card.identifier + "&result=" + this.correct(), true);
+      request.open("POST", "/update?card=" + this.state.card.identifier + "&result=" + this.correct(), true);
       request.onload = function () {
         return undefined;
       };
