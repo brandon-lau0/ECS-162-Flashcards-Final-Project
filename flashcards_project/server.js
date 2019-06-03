@@ -109,9 +109,9 @@ function translateTextHandler(req, res, next) {
 function usernameHandler(req, res) {
 
   // console.log("This is Request!!!!: ", req)
-  console.log("This is userData in the USERNAME HANDLER: ", req.user)
-  console.log("This is userData in the USERNAME HANDLER: ", req.user.firstName)
-  console.log("This is userData in the USERNAME HANDLER: ", req.user.lastName)
+  console.log("This is user in the USERNAME HANDLER: ", req.user)
+  console.log("This is user.FirstName in the USERNAME HANDLER: ", req.user.firstName)
+  console.log("This is user.LastName in the USERNAME HANDLER: ", req.user.lastName)
   let user_name = req.user.firstName + req.user.lastName;
 
   res.json({username: user_name});
@@ -381,7 +381,7 @@ passport.deserializeUser((dbRowID, done) => {
         console.log("*****************************************");
         console.log("this is userData ", userData);
         console.log("this is userData.google_id", userData.google_id);
-        console.log("this is UserData.firstName", userData.firstNname);
+        console.log("this is UserData.firstName", userData.firstName);
         console.log("this is UserData.lastName", userData.lastName);
 
 	      done(null, userData);
