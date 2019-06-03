@@ -1,4 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////////
+//                          welcome to my messy code                         //
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
 //                                   Common                                  //
 ///////////////////////////////////////////////////////////////////////////////
 class TopButton extends React.Component {
@@ -10,7 +14,7 @@ class TopButton extends React.Component {
   render() {
     return (
       <button
-        id="top-button"
+        id={this.props.id}
         className="helvetica white-fg dark-purple-bg"
         onClick={this.props.onClick}
       >
@@ -36,6 +40,7 @@ class TitleBar extends React.Component {
       <section className={`titlebar ${this.props.paddingClass}`}>
         <div className="titlebar-format">
           <TopButton
+            id={this.props.buttonId}
             text={this.props.buttonText}
             onClick={this.props.buttonOnClick}
           />
@@ -54,20 +59,9 @@ class UsernameBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = { username: "Username" };
-    // I really don't like having this in the constructor,
-    // but it's the simplest way.
-    this.queryUsername();
   }
 
-  render() {
-    return (
-      <aside className="user-add helvetica white-fg dark-purple-bg">
-        <div>{this.state.username}</div>
-      </aside>
-    );
-  }
-
-  queryUsername() {
+  componentDidMount() {
     let request = new XMLHttpRequest();
     request.open("GET", "username", true);
 
@@ -81,6 +75,14 @@ class UsernameBar extends React.Component {
     };
 
     request.send();
+  }
+
+  render() {
+    return (
+      <aside className="user-add helvetica white-fg dark-purple-bg">
+        <div>{this.state.username}</div>
+      </aside>
+    );
   }
 }
 
@@ -245,28 +247,111 @@ class CreationCards extends React.Component {
 ///////////////////////////////////////////////////////////////////////////////
 //                                Review Page                                //
 ///////////////////////////////////////////////////////////////////////////////
-// import { FlipCard } from "./flip-card.jsx";
-// TODO is above jsx or js?
+// NOTE: because some of this is third-party code, any code related to
+// reviewing will be generally unclean and monkey-patched because I
+// don't have the time to actually look through and understand what
+// the hell the example is doing.
 
 /*
+ * React component for the front of the card.
+ * https://reactjsexample.com/react-flipping-card-with-tutorial/
+ */
+class ReviewCardFront extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div className="card-side side-front">
+        <div className="card-side-container">
+          <h2 id="trans">{this.props.text}</h2>
+        </div>
+      </div>
+    );
+  }
+}
+
+/*
+ * React component for the back side of the card.
+ * https://reactjsexample.com/react-flipping-card-with-tutorial/
+ */
+class ReviewCardBack extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div className="card-side side-back">
+        <div className="card-side-container">
+          <h2 id="congrats">{this.props.text}</h2>
+        </div>
+      </div>
+    );
+  }
+}
+
+/*
+ * React component for the overall review card.
+ * https://reactjsexample.com/react-flipping-card-with-tutorial/
+ */
+class ReviewCard extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    console.log(this.props.flipped);
+    return (
+      <div
+        className={`helvetica card-container ${
+          this.props.flipped ? "card-container-flip" : ""
+        }`}
+      >
+        <div className="card-body">
+          <ReviewCardBack
+            text={this.props.backText}
+            // TODO:
+            correct={this.props.correct}
+          />
+          <ReviewCardFront text={this.props.frontText} />
+        </div>
+      </div>
+    );
+  }
+}
+/*
  * Component for review cards + button.
- * TODO flip card on enter
+ * TODO: flip card on enter and on top card click
  */
 class ReviewCards extends React.Component {
   // PROPS should contain textId and inputId
   constructor(props) {
     super(props);
-    this.state = { card: undefined };
+    // TODO: uncomment
+    // this.state = { card: undefined };
+    this.state = { card: { english: "no", chinese: "fuck" }, flipped: false };
+  }
+
+  componentDidMount() {
+    this.requestCard();
   }
 
   render() {
+    // There's absolutely no point in using the given CardTextarea
+    // because it's literally just a textarea. If anything, it'll
+    // be a headache.
     return (
       <section className="card-review">
-        <figure className="card-review">
-          <span id={this.props.textId}>
-            {this.state.card ? this.state.card.chinese : "Loading..."}
-          </span>
-        </figure>
+        <div id="flip-card" onClick={this.cardOnClick}>
+          <ReviewCard
+            frontText={this.state.card.chinese}
+            backText={this.state.card.english}
+            correct={this.correct()}
+            flipped={this.state.flipped}
+          />
+        </div>
         <figure className="card-review">
           <textarea
             // scrolls by default
@@ -275,12 +360,13 @@ class ReviewCards extends React.Component {
             type="text"
             placeholder="Translation"
             onKeyDown={this.onKeyDown}
+            required
           />
         </figure>
         <div className="next-button">
           <button
             className="action-button helvetica white-fg green-bg"
-            onClick={this.onClick}
+            onClick={this.buttonOnClick}
           >
             Next
           </button>
@@ -294,24 +380,66 @@ class ReviewCards extends React.Component {
    */
   requestCard() {
     let request = new XMLHttpRequest();
-    // TODO change url if branny & andy use a different one
+    // TODO: change url if branny & andy use a different one
     request.open("GET", "/card", true);
     request.onload = () => {
       let response = JSON.parse(request.responseText);
-      this.setState({ card: response });
+      this.setState({ card: response, flipped: false });
     };
     request.onerror = () => alert("There was an error requesting a card.");
     request.send();
   }
 
+  /*
+   * Lazy name. Checks if the user input is correct.
+   */
+  correct() {
+    const inputElement = document.getElementById(this.props.inputId);
+    return (
+      inputElement &&
+      this.state.card &&
+      this.state.card.chinese == inputElement.value
+    );
+  }
+
+  /*
+   * Sends the answer result to the server.
+   */
+  sendResult() {
+    let request = new XMLHttpRequest();
+    request.open(
+      "POST",
+      `update?card=${this.state.card.identifier}&result=${this.correct()}`,
+      true
+    );
+    request.onload = () => undefined;
+    request.onerror = () => alert("There was an error sending the result.");
+    request.send();
+  }
+
+  /*
+   * As its name suggests.
+   */
+  flipCard() {
+    this.setState({ flipped: !this.state.flipped });
+  }
+
   onKeyDown = event => {
     if (event.key == "Enter") {
-      const input = document.getElementById(this.props.inputId).value;
-
       event.preventDefault();
 
-      // TODO
+      // TODO: uncomment
+      this.setState({ flipped: true });
+      // this.sendResult();
     }
+  };
+
+  cardOnClick = () => {
+    this.flipCard();
+  };
+
+  buttonOnClick = () => {
+    this.requestCard();
   };
 }
 
@@ -325,13 +453,24 @@ class MainScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { reviewing: false };
+    // TODO: uncomment
+    // this.state = { reviewing: false };
+    this.state = { reviewing: true };
+  }
+
+  componentDidMount() {
+    // TODO: send API call to determine starting view
   }
 
   render() {
+    if (this.state.reviewing == undefined) {
+      return <main />;
+    }
+
     return (
       <main>
         <TitleBar
+          buttonId={this.state.reviewing ? "add-button" : "review-button"}
           buttonText={this.state.reviewing ? "Add" : "Start Review"}
           buttonOnClick={this.buttonOnClick}
           paddingClass={
@@ -341,6 +480,7 @@ class MainScreen extends React.Component {
           }
         />
         {this.state.reviewing ? (
+          // textId isn't actually used anymore since we have the third-party component
           <ReviewCards textId="card-tl-review" inputId="card-en-review" />
         ) : (
           <CreationCards inputId="card-en-add" outputId="card-tl-add" />
@@ -358,4 +498,4 @@ class MainScreen extends React.Component {
 
 ReactDOM.render(<MainScreen />, document.getElementById("root"));
 
-// TODO card style can be generalized
+// TODO: card style can be generalized

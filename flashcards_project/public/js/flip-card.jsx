@@ -6,11 +6,11 @@
 
    It was modified for ECS 162 by Nina Amenta, May 2019.
 
-   Modified by Branny's buddy, June 2019.
+   Modified by Branny's buddy to work with the ECS162 final, June 2019.
 */
 
 // React component for form inputs
-class CardInput extends React.Component {
+export class CardInput extends React.Component {
   render() {
     return (
       <fieldset>
@@ -27,7 +27,10 @@ class CardInput extends React.Component {
 }
 
 // React component for textarea
-class CardTextarea extends React.Component {
+export class CardTextarea extends React.Component {
+  // There's absolutely no point in using the given CardTextarea
+  // because it's literally just a textarea. If anything, it'll
+  // be a headache.
   render() {
     return (
       <fieldset>
@@ -73,13 +76,14 @@ export class Card extends React.Component {
   constructor(props) {
     super(props);
   }
+
   render() {
     return (
       <div className="card-container">
         <div className="card-body">
-          <CardBack text="Correct!" />
+          <CardBack text={this.props.backText} />
 
-          <CardFront text="Volare" />
+          <CardFront text={this.props.frontText} />
         </div>
       </div>
     );

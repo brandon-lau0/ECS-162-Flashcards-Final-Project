@@ -14,11 +14,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
    It was modified for ECS 162 by Nina Amenta, May 2019.
 
-   Modified by Branny's buddy, June 2019.
+   Modified by Branny's buddy to work with the ECS162 final, June 2019.
 */
 
 // React component for form inputs
-var CardInput = function (_React$Component) {
+export var CardInput = function (_React$Component) {
   _inherits(CardInput, _React$Component);
 
   function CardInput() {
@@ -48,9 +48,7 @@ var CardInput = function (_React$Component) {
 }(React.Component);
 
 // React component for textarea
-
-
-var CardTextarea = function (_React$Component2) {
+export var CardTextarea = function (_React$Component2) {
   _inherits(CardTextarea, _React$Component2);
 
   function CardTextarea() {
@@ -61,6 +59,10 @@ var CardTextarea = function (_React$Component2) {
 
   _createClass(CardTextarea, [{
     key: "render",
+
+    // There's absolutely no point in using the given CardTextarea
+    // because it's literally just a textarea. If anything, it'll
+    // be a headache.
     value: function render() {
       return React.createElement(
         "fieldset",
@@ -79,7 +81,6 @@ var CardTextarea = function (_React$Component2) {
 }(React.Component);
 
 // React component for the front side of the card
-
 
 var CardFront = function (_React$Component3) {
   _inherits(CardFront, _React$Component3);
@@ -167,8 +168,8 @@ export var Card = function (_React$Component5) {
         React.createElement(
           "div",
           { className: "card-body" },
-          React.createElement(CardBack, { text: "Correct!" }),
-          React.createElement(CardFront, { text: "Volare" })
+          React.createElement(CardBack, { text: this.props.backText }),
+          React.createElement(CardFront, { text: this.props.frontText })
         )
       );
     }

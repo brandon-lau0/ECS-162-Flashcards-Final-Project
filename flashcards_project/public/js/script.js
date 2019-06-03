@@ -7,6 +7,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 ///////////////////////////////////////////////////////////////////////////////
+//                          welcome to my messy code                         //
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
 //                                   Common                                  //
 ///////////////////////////////////////////////////////////////////////////////
 var TopButton = function (_React$Component) {
@@ -25,7 +29,7 @@ var TopButton = function (_React$Component) {
       return React.createElement(
         "button",
         {
-          id: "top-button",
+          id: this.props.id,
           className: "helvetica white-fg dark-purple-bg",
           onClick: this.props.onClick
         },
@@ -65,6 +69,7 @@ var TitleBar = function (_React$Component2) {
             "div",
             { className: "titlebar-format" },
             React.createElement(TopButton, {
+              id: this.props.buttonId,
               text: this.props.buttonText,
               onClick: this.props.buttonOnClick
             })
@@ -97,28 +102,12 @@ var UsernameBar = function (_React$Component3) {
     var _this3 = _possibleConstructorReturn(this, (UsernameBar.__proto__ || Object.getPrototypeOf(UsernameBar)).call(this, props));
 
     _this3.state = { username: "Username" };
-    // I really don't like having this in the constructor,
-    // but it's the simplest way.
-    _this3.queryUsername();
     return _this3;
   }
 
   _createClass(UsernameBar, [{
-    key: "render",
-    value: function render() {
-      return React.createElement(
-        "aside",
-        { className: "user-add helvetica white-fg dark-purple-bg" },
-        React.createElement(
-          "div",
-          null,
-          this.state.username
-        )
-      );
-    }
-  }, {
-    key: "queryUsername",
-    value: function queryUsername() {
+    key: "componentDidMount",
+    value: function componentDidMount() {
       var _this4 = this;
 
       var request = new XMLHttpRequest();
@@ -134,6 +123,19 @@ var UsernameBar = function (_React$Component3) {
       };
 
       request.send();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return React.createElement(
+        "aside",
+        { className: "user-add helvetica white-fg dark-purple-bg" },
+        React.createElement(
+          "div",
+          null,
+          this.state.username
+        )
+      );
     }
   }]);
 
@@ -339,52 +341,187 @@ var CreationCards = function (_React$Component4) {
 ///////////////////////////////////////////////////////////////////////////////
 //                                Review Page                                //
 ///////////////////////////////////////////////////////////////////////////////
-// import { FlipCard } from "./flip-card.jsx";
-// TODO is above jsx or js?
+// NOTE: because some of this is third-party code, any code related to
+// reviewing will be generally unclean and monkey-patched because I
+// don't have the time to actually look through and understand what
+// the hell the example is doing.
 
 /*
- * Component for review cards + button.
- * TODO flip card on enter
+ * React component for the front of the card.
+ * https://reactjsexample.com/react-flipping-card-with-tutorial/
  */
 
 
-var ReviewCards = function (_React$Component5) {
-  _inherits(ReviewCards, _React$Component5);
+var ReviewCardFront = function (_React$Component5) {
+  _inherits(ReviewCardFront, _React$Component5);
+
+  function ReviewCardFront(props) {
+    _classCallCheck(this, ReviewCardFront);
+
+    return _possibleConstructorReturn(this, (ReviewCardFront.__proto__ || Object.getPrototypeOf(ReviewCardFront)).call(this, props));
+  }
+
+  _createClass(ReviewCardFront, [{
+    key: "render",
+    value: function render() {
+      return React.createElement(
+        "div",
+        { className: "card-side side-front" },
+        React.createElement(
+          "div",
+          { className: "card-side-container" },
+          React.createElement(
+            "h2",
+            { id: "trans" },
+            this.props.text
+          )
+        )
+      );
+    }
+  }]);
+
+  return ReviewCardFront;
+}(React.Component);
+
+/*
+ * React component for the back side of the card.
+ * https://reactjsexample.com/react-flipping-card-with-tutorial/
+ */
+
+
+var ReviewCardBack = function (_React$Component6) {
+  _inherits(ReviewCardBack, _React$Component6);
+
+  function ReviewCardBack(props) {
+    _classCallCheck(this, ReviewCardBack);
+
+    return _possibleConstructorReturn(this, (ReviewCardBack.__proto__ || Object.getPrototypeOf(ReviewCardBack)).call(this, props));
+  }
+
+  _createClass(ReviewCardBack, [{
+    key: "render",
+    value: function render() {
+      return React.createElement(
+        "div",
+        { className: "card-side side-back" },
+        React.createElement(
+          "div",
+          { className: "card-side-container" },
+          React.createElement(
+            "h2",
+            { id: "congrats" },
+            this.props.text
+          )
+        )
+      );
+    }
+  }]);
+
+  return ReviewCardBack;
+}(React.Component);
+
+/*
+ * React component for the overall review card.
+ * https://reactjsexample.com/react-flipping-card-with-tutorial/
+ */
+
+
+var ReviewCard = function (_React$Component7) {
+  _inherits(ReviewCard, _React$Component7);
+
+  function ReviewCard(props) {
+    _classCallCheck(this, ReviewCard);
+
+    return _possibleConstructorReturn(this, (ReviewCard.__proto__ || Object.getPrototypeOf(ReviewCard)).call(this, props));
+  }
+
+  _createClass(ReviewCard, [{
+    key: "render",
+    value: function render() {
+      console.log(this.props.flipped);
+      return React.createElement(
+        "div",
+        {
+          className: "helvetica card-container " + (this.props.flipped ? "card-container-flip" : "")
+        },
+        React.createElement(
+          "div",
+          { className: "card-body" },
+          React.createElement(ReviewCardBack, {
+            text: this.props.backText
+            // TODO:
+            , correct: this.props.correct
+          }),
+          React.createElement(ReviewCardFront, { text: this.props.frontText })
+        )
+      );
+    }
+  }]);
+
+  return ReviewCard;
+}(React.Component);
+/*
+ * Component for review cards + button.
+ * TODO: flip card on enter and on top card click
+ */
+
+
+var ReviewCards = function (_React$Component8) {
+  _inherits(ReviewCards, _React$Component8);
 
   // PROPS should contain textId and inputId
   function ReviewCards(props) {
     _classCallCheck(this, ReviewCards);
 
-    var _this6 = _possibleConstructorReturn(this, (ReviewCards.__proto__ || Object.getPrototypeOf(ReviewCards)).call(this, props));
+    // TODO: uncomment
+    // this.state = { card: undefined };
+    var _this9 = _possibleConstructorReturn(this, (ReviewCards.__proto__ || Object.getPrototypeOf(ReviewCards)).call(this, props));
 
-    _this6.onKeyDown = function (event) {
+    _this9.onKeyDown = function (event) {
       if (event.key == "Enter") {
-        var input = document.getElementById(_this6.props.inputId).value;
-
         event.preventDefault();
 
-        // TODO
+        // TODO: uncomment
+        _this9.setState({ flipped: true });
+        // this.sendResult();
       }
     };
 
-    _this6.state = { card: undefined };
-    return _this6;
+    _this9.cardOnClick = function () {
+      _this9.flipCard();
+    };
+
+    _this9.buttonOnClick = function () {
+      _this9.requestCard();
+    };
+
+    _this9.state = { card: { english: "no", chinese: "fuck" }, flipped: false };
+    return _this9;
   }
 
   _createClass(ReviewCards, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.requestCard();
+    }
+  }, {
     key: "render",
     value: function render() {
+      // There's absolutely no point in using the given CardTextarea
+      // because it's literally just a textarea. If anything, it'll
+      // be a headache.
       return React.createElement(
         "section",
         { className: "card-review" },
         React.createElement(
-          "figure",
-          { className: "card-review" },
-          React.createElement(
-            "span",
-            { id: this.props.textId },
-            this.state.card ? this.state.card.chinese : "Loading..."
-          )
+          "div",
+          { id: "flip-card", onClick: this.cardOnClick },
+          React.createElement(ReviewCard, {
+            frontText: this.state.card.chinese,
+            backText: this.state.card.english,
+            correct: this.correct(),
+            flipped: this.state.flipped
+          })
         ),
         React.createElement(
           "figure",
@@ -395,7 +532,8 @@ var ReviewCards = function (_React$Component5) {
             className: "helvetica",
             type: "text",
             placeholder: "Translation",
-            onKeyDown: this.onKeyDown
+            onKeyDown: this.onKeyDown,
+            required: true
           })
         ),
         React.createElement(
@@ -405,7 +543,7 @@ var ReviewCards = function (_React$Component5) {
             "button",
             {
               className: "action-button helvetica white-fg green-bg",
-              onClick: this.onClick
+              onClick: this.buttonOnClick
             },
             "Next"
           )
@@ -420,19 +558,58 @@ var ReviewCards = function (_React$Component5) {
   }, {
     key: "requestCard",
     value: function requestCard() {
-      var _this7 = this;
+      var _this10 = this;
 
       var request = new XMLHttpRequest();
-      // TODO change url if branny & andy use a different one
+      // TODO: change url if branny & andy use a different one
       request.open("GET", "/card", true);
       request.onload = function () {
         var response = JSON.parse(request.responseText);
-        _this7.setState({ card: response });
+        _this10.setState({ card: response, flipped: false });
       };
       request.onerror = function () {
         return alert("There was an error requesting a card.");
       };
       request.send();
+    }
+
+    /*
+     * Lazy name. Checks if the user input is correct.
+     */
+
+  }, {
+    key: "correct",
+    value: function correct() {
+      var inputElement = document.getElementById(this.props.inputId);
+      return inputElement && this.state.card && this.state.card.chinese == inputElement.value;
+    }
+
+    /*
+     * Sends the answer result to the server.
+     */
+
+  }, {
+    key: "sendResult",
+    value: function sendResult() {
+      var request = new XMLHttpRequest();
+      request.open("POST", "update?card=" + this.state.card.identifier + "&result=" + this.correct(), true);
+      request.onload = function () {
+        return undefined;
+      };
+      request.onerror = function () {
+        return alert("There was an error sending the result.");
+      };
+      request.send();
+    }
+
+    /*
+     * As its name suggests.
+     */
+
+  }, {
+    key: "flipCard",
+    value: function flipCard() {
+      this.setState({ flipped: !this.state.flipped });
     }
   }]);
 
@@ -447,34 +624,48 @@ var ReviewCards = function (_React$Component5) {
  */
 
 
-var MainScreen = function (_React$Component6) {
-  _inherits(MainScreen, _React$Component6);
+var MainScreen = function (_React$Component9) {
+  _inherits(MainScreen, _React$Component9);
 
   function MainScreen(props) {
     _classCallCheck(this, MainScreen);
 
-    var _this8 = _possibleConstructorReturn(this, (MainScreen.__proto__ || Object.getPrototypeOf(MainScreen)).call(this, props));
+    // TODO: uncomment
+    // this.state = { reviewing: false };
+    var _this11 = _possibleConstructorReturn(this, (MainScreen.__proto__ || Object.getPrototypeOf(MainScreen)).call(this, props));
 
-    _this8.buttonOnClick = function () {
-      _this8.setState({ reviewing: !_this8.state.reviewing });
+    _this11.buttonOnClick = function () {
+      _this11.setState({ reviewing: !_this11.state.reviewing });
     };
 
-    _this8.state = { reviewing: false };
-    return _this8;
+    _this11.state = { reviewing: true };
+    return _this11;
   }
 
   _createClass(MainScreen, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      // TODO: send API call to determine starting view
+    }
+  }, {
     key: "render",
     value: function render() {
+      if (this.state.reviewing == undefined) {
+        return React.createElement("main", null);
+      }
+
       return React.createElement(
         "main",
         null,
         React.createElement(TitleBar, {
+          buttonId: this.state.reviewing ? "add-button" : "review-button",
           buttonText: this.state.reviewing ? "Add" : "Start Review",
           buttonOnClick: this.buttonOnClick,
           paddingClass: this.state.reviewing ? "titlebar-review-padding" : "titlebar-add-padding"
         }),
-        this.state.reviewing ? React.createElement(ReviewCards, { textId: "card-tl-review", inputId: "card-en-review" }) : React.createElement(CreationCards, { inputId: "card-en-add", outputId: "card-tl-add" }),
+        this.state.reviewing ?
+        // textId isn't actually used anymore since we have the third-party component
+        React.createElement(ReviewCards, { textId: "card-tl-review", inputId: "card-en-review" }) : React.createElement(CreationCards, { inputId: "card-en-add", outputId: "card-tl-add" }),
         React.createElement(UsernameBar, { username: "Branny Buddy" })
       );
     }
@@ -485,4 +676,4 @@ var MainScreen = function (_React$Component6) {
 
 ReactDOM.render(React.createElement(MainScreen, null), document.getElementById("root"));
 
-// TODO card style can be generalized
+// TODO: card style can be generalized

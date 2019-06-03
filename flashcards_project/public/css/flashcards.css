@@ -23,6 +23,17 @@ section.titlebar {
   padding-top: 4%;
 }
 
+textarea {
+  outline: none;
+  box-shadow: none;
+  resize: none;
+}
+
+textarea:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 .titlebar-add-padding {
   padding-left: 5%;
   padding-right: 5%;
@@ -30,6 +41,8 @@ section.titlebar {
 
 /* TODO */
 .titlebar-review-padding {
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
 div.titlebar-format {
@@ -41,7 +54,7 @@ div.titlebar-format {
   align-items: flex-start;
 }
 
-#top-button {
+#review-button {
   justify-self: left;
 
   font-size: 0.9em;
@@ -49,6 +62,16 @@ div.titlebar-format {
   padding: 0.5em;
   padding-left: 0.5em;
   padding-right: 0.5em;
+}
+
+#add-button {
+  justify-self: left;
+
+  font-size: 0.9em;
+
+  padding: 0.5em;
+  padding-left: 2em;
+  padding-right: 2em;
 }
 
 #top-button:hover {
@@ -93,8 +116,6 @@ figure.card-add {
 
   display: block;
   border: 0px none;
-  outline: none;
-  resize: none;
   overflow: hidden;
 
   min-height: 0%;
@@ -133,17 +154,70 @@ div.save-button {
   padding-right: 15%;
 }
 
-div.next-button {
+section.card-review {
+  flex: 6;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#flip-card {
+  flex: 3;
+
+  width: 75%;
+
+  /* margin-left: 10%; */
+  /* margin-right: 10%; */
+
+  margin-bottom: 4vh;
+}
+
+figure.card-review {
+  flex: 1;
+
+  width: 75%;
+
+  border: 1px solid #000000;
+}
+
+#card-en-review {
+  box-sizing: border-box;
+  width: 96%;
+  /* firefox does the dumb here */
+  height: 100%;
+
+  font-size: 1.2em;
+  padding: 0.7em;
+}
+
+div.save-button {
   flex: 1.2;
 
   display: flex;
   justify-content: flex-end;
   align-items: start;
 
+  width: 70%;
   padding-top: 5%;
   /* sum of margins of cards and padding of outer container */
   padding-left: 15%;
   padding-right: 15%;
+}
+
+div.next-button {
+  flex: 1.2;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  width: 75%;
+  /* padding-top: 10%; */
+  /* sum of margins of cards and padding of outer container */
+  /* padding-left: 12.5%; */
+  /* padding-right: 12.5%; */
 }
 
 button.action-button {
@@ -209,15 +283,32 @@ aside.user-add {
     margin-right: 2.5%;
   }
 
+  #flip-card {
+    width: 60%;
+    /* padding-left: 20%; */
+    /* padding-right: 20%; */
+  }
+
+  figure.card-review {
+    width: 60%;
+    /* padding-left: 20%; */
+    /* padding-right: 20%; */
+  }
+
   div.save-button {
     flex: 2;
 
     align-items: center;
 
+    width: 69%;
     padding-top: 0%;
     /* sum of margins of figure.card-add and padding ofQsection.card-add */
     padding-left: 15.5%;
     padding-right: 15.5%;
+  }
+
+  div.next-button {
+    width: 60%;
   }
 
   button.action-button {
@@ -240,6 +331,11 @@ aside.user-add {
       padding-right: 5%;
     }
 
+    .titlebar-review-padding {
+      padding-left: 10%;
+      padding-right: 10%;
+    }
+
     #top-button {
       padding-left: 1em;
       padding-right: 1em;
@@ -258,12 +354,42 @@ aside.user-add {
       margin-right: 2%;
     }
 
+    #flip-card {
+      flex: 3;
+
+      width: 80%;
+
+      /* margin-left: 10%; */
+      /* margin-right: 10%; */
+
+      margin-bottom: 6%;
+    }
+
+    figure.card-review {
+      flex: 1;
+
+      width: 80%;
+
+      border: 1px solid #000000;
+    }
+
     div.save-button {
       align-items: flex-start;
 
+      width: 88%;
       /* section.card-add padding + figure.card-add margin */
       padding-left: 6%;
       padding-right: 6%;
+    }
+
+    div.next-button {
+      align-items: flex-start;
+
+      width: 80%;
+      /* section.card-add padding + figure.card-add margin */
+      padding-top: 5%;
+      padding-left: 5%;
+      padding-right: 5%;
     }
 
     aside.user-add {
