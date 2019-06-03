@@ -108,7 +108,7 @@ function translateTextHandler(req, res, next) {
 
 function usernameHandler(req, res) {
   let user_name = req.userData.first_name + req.userData.last_name;
-  
+
   res.json({username: user_name});
 }
 
@@ -226,6 +226,7 @@ app.get('/auth/accepted',
       
   });
 
+app.use(express.static('public'));  // can I find a static file?
 
 // static files in /user are only available after login
 app.get('/user/*',
@@ -235,8 +236,6 @@ app.get('/user/*',
   express.static('.') 
        ); 
 
-
-app.use(express.static('public'));  // can I find a static file?
 app.get('/username', usernameHandler);
 app.get('/translate', translateTextHandler);
 app.post('/store', queryHandler);   // if not, is it a valid query?
