@@ -217,19 +217,18 @@ function getCardHandler(req, res) {
 
             // function call to make sure it update the row
             // put value in from the second cards into the JSON and send it
-            let getCard = {
-              "unique_identifier":rowData2.row_id,
-              "englishText": rowData2.english_text,
-              "translatedText": rowData2.trans_text
-            }
-
-            res.json({"getCard": getCard});
+            res.json(
+              {
+                "unique_identifier":rowData2.row_id,
+                "englishText": rowData2.english_text,
+                "translatedText": rowData2.trans_text
+              }
+            );
           }
         }); // the end of flashcardDB.Get
     }
   } // getCardCallback
 } // getCardHandler
-
 
 
 function fileNotFound(req, res) {
@@ -347,8 +346,8 @@ app.get('/user/*',
        ); 
 
 app.get('/username', usernameHandler);
-app.get('/hascards', hasCardHandler);
-app.get('/getcards', getCardHandler)
+app.get('/hascard', hasCardHandler);
+app.get('/getcard', getCardHandler);
 app.get('/translate', translateTextHandler);
 app.post('/store', queryHandler);   // if not, is it a valid query?
 app.use( fileNotFound );            // otherwise not found
