@@ -130,9 +130,9 @@ function hasCardHandler(req,res) {
 
         let hasFlashcards;
         if (rowData['count(user_id)'] > 0){
-           hasFlashcards = "true";
+           hasFlashcards = true;
         } else {
-           hasFlashcards = "false";
+           hasFlashcards = false;
         }
         res.json({"hasCard": hasFlashcards});
     }
