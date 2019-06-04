@@ -107,8 +107,6 @@ function translateTextHandler(req, res, next) {
 }
 
 function usernameHandler(req, res) {
-
-  //console.log("This is Request!!!!: ", req)
   console.log("This is user in the USERNAME HANDLER: ", req.user)
   console.log("This is user.FirstName in the USERNAME HANDLER: ", req.user.firstName)
   console.log("This is user.LastName in the USERNAME HANDLER: ", req.user.lastName)
@@ -117,26 +115,26 @@ function usernameHandler(req, res) {
   res.json({username: user_name});
 }
 
-function hasCardHandler(req,res) {
+function hasCardHandler(req, res) {
   
   let searchCmdStr = `SELECT count(user_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
-    flashcardDb.get(searchCmdStr, hasCardCallback);
+  flashcardDb.get(searchCmdStr, hasCardCallback);
 
-    function hasCardCallback(err, rowData) {
-      if (err) {
-        console.log("Error occurred in hasCardCallback function. Error is:", err);
+  function hasCardCallback(err, rowData) {
+    if (err) {
+      console.log("Error occurred in hasCardCallback function. Error is:", err);
+    } else {
+      console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData);
+  
+      let hasFlashcards;
+      if (rowData['count(user_id)'] > 0) {
+         hasFlashcards = true;
       } else {
-        console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData);
-    
-        let hasFlashcards;
-        if (rowData['count(user_id)'] > 0){
-           hasFlashcards = true;
-        } else {
-           hasFlashcards = false;
-        }
-        res.json({"hasCard": hasFlashcards});
+         hasFlashcards = false;
+      }
+      res.json({"hasCard": hasFlashcards});
     }
-}
+  }
 }
 
 /**
@@ -144,13 +142,15 @@ function hasCardHandler(req,res) {
  * and call a callback to access the rows in the result set.
  */
 
-function getCardHandler(req,res) {
+function getCardHandler(req, res) {
   // let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
+
   /**
    * The get() method executes an SQL query and calls the callback function on the first result row. 
    * In case the result set is empty, the row argument is undefined.
    * USE GET WHEN When you know that the result set contains zero or one row
    */
+
   // flashcardDb.get(searchCmdStr, getCardCallback);
   flashcardDb.get(`SELECT count(row_id) FROM Flashcards WHERE user_id = ?`, [106024817130400200000], getCardCallback);
 
@@ -158,7 +158,7 @@ function getCardHandler(req,res) {
     if (err) {
       console.log("Error occurred in getCardCallback function. Error is:", err);
     } else {
-      console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData);
+      console.log("Successfully retrieved user's flashcards from database. Received:", rowData);
 
       console.log("THIS IS THE LENG OF rowData COunt  ", rowData['count(row_id)']);
       let array_of_cards = new Array(rowData['count(row_id)']); 
@@ -178,7 +178,7 @@ function getCardHandler(req,res) {
        */
       flashcardDb.each(sql, (err,row) => {
         if (err) {
-        console.log("Error occurred in getCardCallback function2. Error is:", err);          
+          console.log("Error occurred in getCardCallback function2. Error is:", err);          
         } 
         // loop through until all row gets called and assign it to array
         array_of_cards[i] = row.row_id;
@@ -194,48 +194,49 @@ function getCardHandler(req,res) {
       flashcardDb.get(`SELECT *
                       FROM Flashcards
                       WHERE row_id = ?`, [randomCards],
-          (err, rowData2) => {
+        (err, rowData2) => {
 
-            if (err) {
-              console.log("Error occurred in hasCardCallback function. Error is:", err);
-            } else {
-              console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData2);
-         
-          // update the numShow in the database 
-      let totalShow = rowData2.num_show + 1;
-      
-      flashcardDb.run(`UPDATE Flashcards 
-                      SET num_show=? `,[totalShow], 
-                      
-    (err, updateRow) =>{
-        if (err) {
-          console.log("Error occurred in hasCardCallback function. Error is:", err);
-        } else {
-          console.log("The row has been updated! it is now ", updateRow);
-        }
-       }); // the end of flashCardDb.run
+          if (err) {
+            console.log("Error occurred in hasCardCallback function. Error is:", err);
+          } else {
+            console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData2);
+                             
+            // update the numShow in the database 
+            let totalShow = rowData2.num_show + 1;
+                          
+            flashcardDb.run(`UPDATE Flashcards SET num_show=? `,[totalShow], 
+                                          
+              (err, updateRow) => {
+                if (err) {
+                  console.log("Error occurred in updating the num_show for the flashcard. Error is:", err);
+                } else {
+                  console.log("The num_show for the flashcard has been updated! it is now ", updateRow);
+                }
+              }
+            ); // the end of flashCardDb.run
 
-     // function call to make sure it update the row
-      // put value in from the second cards into the JSON and send it
-        let getCard = {
-          "unique_identifier":rowData2.row_id,
-          "englishText": rowData2.english_text,
-          "translatedText": rowData2.trans_text
-        }
-    res.json({"getCard": getCard});
-   }
-  }); // the end of flashcardDB.Get
-}
-}
-}
+            // function call to make sure it update the row
+            // put value in from the second cards into the JSON and send it
+            let getCard = {
+              "unique_identifier":rowData2.row_id,
+              "englishText": rowData2.english_text,
+              "translatedText": rowData2.trans_text
+            }
+
+            res.json({"getCard": getCard});
+          }
+        }); // the end of flashcardDB.Get
+    }
+  } // getCardCallback
+} // getCardHandler
 
 
 
 function fileNotFound(req, res) {
-    let url = req.url;
-    res.type('text/plain');
-    res.status(404);
-    res.send('Cannot find ' + url);
+  let url = req.url;
+  res.type('text/plain');
+  res.status(404);
+  res.send('Cannot find ' + url);
 }
 
 // ====================================== LOGIN CODE =========================================
