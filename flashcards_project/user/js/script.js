@@ -656,7 +656,7 @@ var MainScreen = function (_React$Component9) {
 
       // TODO: check if this works
       var request = new XMLHttpRequest();
-      request.open("GET", "/hascards", true);
+      request.open("GET", "/hascard", true);
 
       request.onload = function () {
         var response = JSON.parse(request.responseText);

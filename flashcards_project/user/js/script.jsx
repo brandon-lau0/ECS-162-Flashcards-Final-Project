@@ -475,7 +475,7 @@ class MainScreen extends React.Component {
   componentDidMount() {
     // TODO: check if this works
     let request = new XMLHttpRequest();
-    request.open("GET", "/hascards", true);
+    request.open("GET", "/hascard", true);
 
     request.onload = () => {
       let response = JSON.parse(request.responseText);
