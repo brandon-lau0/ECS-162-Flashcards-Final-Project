@@ -127,7 +127,7 @@ function hasCardHandler(req,res) {
         console.log("Error occurred in hasCardCallback function. Error is:", err);
       } else {
         console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData);
-
+    
         let hasFlashcards;
         if (rowData['count(user_id)'] > 0){
            hasFlashcards = "true";
@@ -139,7 +139,83 @@ function hasCardHandler(req,res) {
 }
 }
 
+/**
+ * The db.all() method allows you to execute an SQL query with specified parameters 
+ * and call a callback to access the rows in the result set.
+ */
 
+function getCardHandler(req,res) {
+  let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
+  /**
+   * The get() method executes an SQL query and calls the callback function on the first result row. 
+   * In case the result set is empty, the row argument is undefined.
+   * USE GET WHEN When you know that the result set contains zero or one row
+   */
+  flashcardDb.get(searchCmdStr, getCardCallback);
+
+  function getCardCallback(err, rowData) {
+    if (err) {
+      console.log("Error occurred in getCardCallback function. Error is:", err);
+    } else {
+      console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData);
+
+      
+      let array_of_cards = new Array(rowData['count(user_id)']);
+      let sql = `SELECT row_id
+                  FROM Flashcards
+                  WHERE user_id = ${req.user.google_id}`;
+      // assign variable to get the length
+      let i = 0;
+      /**
+       * http://www.sqlitetutorial.net/sqlite-nodejs/query/ reference
+       * The each() method executes an SQL query with specified parameters 
+       * and calls a callback for every row in the result set.
+       */
+      flashcardDb.each(sql, (err,row) => {
+        if (err) {
+        console.log("Error occurred in getCardCallback function2. Error is:", err);          
+        } 
+        // loop through until all row gets called and assign it to array
+        array_of_cards[i] = row.row_id;
+        // update the i as the function each loop through the row
+        i++;
+      });
+      console.log("this is i value at the moment, ", i);
+      let randNum = Math.floor((Math.random() * i));
+      let randomCards = array_of_cards[randNum];
+      let sql2 = `SELECT *
+                  FROM Flashcards
+                  WHERE row_id = ?`, [randomCards];
+      
+      flashcardDb.get(sql2,(err, rowData2) => {
+        if (err) {
+          console.log("Error occurred in hasCardCallback function. Error is:", err);
+        } else {
+          console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData2);
+         
+          // update the numShow in the database 
+      let totalShow = rowData2.num_show + 1;
+      let sqlUpdate = `UPDATE Flashcards 
+                       SET num_show=? `,[totalShow];
+      flashcardDb.run(sqlUpdate, (err, updateRow) =>{
+        if (err) {
+          console.log("Error occurred in hasCardCallback function. Error is:", err);
+        } else {
+          console.log("The row has been updated! it is now ", updateRow);
+        }
+       }); // the end of flashCardDb.run
+       
+     // function call to make sure it update the row
+      // put value in from the second cards into the JSON and send it
+        let getCard = {
+          "unique_identifier":rowData2.row_id,
+          "englishText": rowData2.english_text,
+          "translatedText": rowData2.trans_text
+        }
+    res.json({"getCard": getCard});
+   }
+  }); // the end of flashcardDB.Get
+}
 
 
 
@@ -245,10 +321,6 @@ app.get('/auth/accepted',
           }
         }
       }
-
-
-
-      
   });
 
 app.use(express.static('public'));  // can I find a static file?
@@ -263,6 +335,7 @@ app.get('/user/*',
 
 app.get('/username', usernameHandler);
 app.get('/hascards', hasCardHandler);
+app.get('/getcards', getCardHandler)
 app.get('/translate', translateTextHandler);
 app.post('/store', queryHandler);   // if not, is it a valid query?
 app.use( fileNotFound );            // otherwise not found
