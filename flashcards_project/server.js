@@ -118,11 +118,8 @@ function usernameHandler(req, res) {
 }
 
 function hasCardHandler(req,res) {
-
-  console.log("this is req ", req);
-  console.log("this is googleId ", req.user.google_id);
-
-  let searchCmdStr = `SELECT count(google_id) FROM Flashcards WHERE google_id = ${req.user.google_id}`;
+  
+  let searchCmdStr = `SELECT count(user_id) FROM Flashcards WHERE google_id = ${req.user.google_id}`;
     flashcardDb.get(searchCmdStr, getUserInfoCallback);
 
     function getUserInfoCallback(err, rowData) {
@@ -131,7 +128,7 @@ function hasCardHandler(req,res) {
       } else {
         console.log("Successfully retrieved user info from database. Received:", rowData);
         let x;
-        if (rowData["count(google_id)"] > 0){
+        if (rowData['count(user_id)'] > 0){
            x = "True";
         } else {
            x = "False";
@@ -140,6 +137,8 @@ function hasCardHandler(req,res) {
     }
 }
 }
+
+
 
 
 
@@ -412,6 +411,34 @@ passport.deserializeUser((dbRowID, done) => {
         console.log("this is UserData.lastName", userData.lastName);
 
 	      done(null, userData);
+      }
+    }
+
+
+    let searchCmdStr1 = `SELECT count(google_id) FROM UserInfo WHERE google_id = ${dbRowID}`;
+    flashcardDb.get(searchCmdStr1, getUserInfoCallback2);
+
+    function getUserInfoCallback2(err, rowData1) {
+      if (err) {
+        console.log("Error occurred in getUserInfoCallback function. Error is:", err);
+      } else {
+        console.log("Successfully retrieved user info from database FlashCards!!. Received:", rowData1);
+        console.log("this is googleId count ", rowData1['count(google_id)']);
+        /*
+          rowData is an object in the format:
+          { google_id: 0000000000000,
+            first_name: 'FirstName',
+            last_name: 'LastName' 
+          }
+        */
+        // console.log("this is rowData.google_id", rowData.google_id);
+        // console.log("this is rowData.first_name", rowData.first_name);
+        // console.log("this is rowData.last_name", rowData.last_name);
+        // console.log("this is rowData", rowData);
+   
+       
+
+	      // done(null, userData);
       }
     }
 
