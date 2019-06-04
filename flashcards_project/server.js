@@ -45,7 +45,7 @@ function queryHandler(req, res, next) {
               return console.log("something is wrong cannot put the data to Database", err.message);
             }
             // get the last insert id
-            console.log(`A row has been inserted ${this.changes}`);
+            console.log(`A row has been inserted: ${this.changes}`);
             res.json({});
           });
   } else {
@@ -117,10 +117,10 @@ function usernameHandler(req, res) {
   res.json({username: user_name});
 }
 
-function hasCardHandler(req,res) {
+function hasCardHandler(req, res) {
   
   let searchCmdStr = `SELECT count(user_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
-    flashcardDb.get(searchCmdStr, hasCardCallback);
+  flashcardDb.get(searchCmdStr, hasCardCallback);
 
     function hasCardCallback(err, rowData) {
       if (err) {
@@ -136,7 +136,40 @@ function hasCardHandler(req,res) {
         }
         res.json({"hasCard": hasFlashcards});
     }
+  }
 }
+
+function putResultHandler(req, res, next) {
+  let qObj = req.query;
+  /*
+    qObj contains:
+    {
+      unique_identifier: 000,
+      result: "String of user's answer"
+    }
+  */
+
+  if (qObj != undefined) {
+    let searchCmdStr = `SELECT english_text FROM Flashcards WHERE row_id = ${qObj.unique_identifier}`;
+    flashcardDb.get(searchCmdStr, checkResultCallback);
+
+    function checkResultCallback(err, rowData) {
+      if (err) {
+        console.log("Error occurred in checkResultCallback function. Error is:", err);
+      } else {
+        console.log("Successfully found the english_text from database. Received:", rowData);
+
+        if (rowData.english_text == qObj.result) {
+          // FIXME: NEED TO UPDATE CORRECT VAR IN DB BEFORE SENDING JSON BACK TO BROWSER
+          res.json({"unique_identifier": qObj.unique_identifier, "result": "true"});
+        } else {
+          res.json({"unique_identifier": qObj.unique_identifier, "result": "false"});
+        }
+      }
+    }
+  } else {
+    next();
+  }
 }
 
 
@@ -263,6 +296,7 @@ app.get('/user/*',
 
 app.get('/username', usernameHandler);
 app.get('/hascards', hasCardHandler);
+app.post('/putsesult', putResultHandler);
 app.get('/translate', translateTextHandler);
 app.post('/store', queryHandler);   // if not, is it a valid query?
 app.use( fileNotFound );            // otherwise not found
