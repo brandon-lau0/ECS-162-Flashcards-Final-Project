@@ -119,7 +119,7 @@ function usernameHandler(req, res) {
 
 function hasCardHandler(req,res) {
   
-  let searchCmdStr = `SELECT count(user_id) FROM Flashcards WHERE google_id = ${req.user.google_id}`;
+  let searchCmdStr = `SELECT count(user_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
     flashcardDb.get(searchCmdStr, hasCardCallback);
 
     function hasCardCallback(err, rowData) {
