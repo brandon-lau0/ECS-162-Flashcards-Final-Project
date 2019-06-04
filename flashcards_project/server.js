@@ -38,7 +38,7 @@ function queryHandler(req, res, next) {
                                          english_text,
                                          trans_text,
                                          num_show,
-                                         num_correct) VALUES(1, ?, ?, 0, 0)`, [engl,trans], 
+                                         num_correct) VALUES(?, ?, ?, 0, 0)`, [req.user.google_id, engl, trans], 
 
           function(err) {
             if (err) {
