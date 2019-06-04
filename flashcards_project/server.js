@@ -145,13 +145,14 @@ function hasCardHandler(req,res) {
  */
 
 function getCardHandler(req,res) {
-  let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
+  // let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
   /**
    * The get() method executes an SQL query and calls the callback function on the first result row. 
    * In case the result set is empty, the row argument is undefined.
    * USE GET WHEN When you know that the result set contains zero or one row
    */
-  flashcardDb.get(searchCmdStr, getCardCallback);
+  // flashcardDb.get(searchCmdStr, getCardCallback);
+  flashcardDb.get(`SELECT count(row_id) FROM Flashcards WHERE user_id = ?`, [106024817130400200000], getCardCallback);
 
   function getCardCallback(err, rowData) {
     if (err) {
@@ -159,13 +160,17 @@ function getCardHandler(req,res) {
     } else {
       console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData);
 
-      
-      let array_of_cards = new Array(rowData['count(user_id)']);
-      let sql = `SELECT row_id
+      console.log("THIS IS THE LENG OF rowData COunt  ", rowData['count(row_id)']);
+      let array_of_cards = new Array(rowData['count(row_id)']); 
+      // let sql = `SELECT row_id
+      //             FROM Flashcards
+      //             WHERE user_id = ${req.user.google_id}`;
+                  let sql = `SELECT row_id
                   FROM Flashcards
-                  WHERE user_id = ${req.user.google_id}`;
+                  WHERE user_id = 106024817130400200000`;
       // assign variable to get the length
-      let i = 0;
+      let i = rowData['count(row_id)'];
+      console.log("THIS IS THE LENG OF ARRAY ", array_of_cards.length);
       /**
        * http://www.sqlitetutorial.net/sqlite-nodejs/query/ reference
        * The each() method executes an SQL query with specified parameters 
@@ -178,33 +183,38 @@ function getCardHandler(req,res) {
         // loop through until all row gets called and assign it to array
         array_of_cards[i] = row.row_id;
         // update the i as the function each loop through the row
-        i++;
+        // i++; // figure out why its still 0
       });
       console.log("this is i value at the moment, ", i);
+
+      //******************** THE BOTTOM PART NEED TO BE FIXED */
       let randNum = Math.floor((Math.random() * i));
       let randomCards = array_of_cards[randNum];
-      let sql2 = `SELECT *
-                  FROM Flashcards
-                  WHERE row_id = ?`, [randomCards];
       
-      flashcardDb.get(sql2,(err, rowData2) => {
-        if (err) {
-          console.log("Error occurred in hasCardCallback function. Error is:", err);
-        } else {
-          console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData2);
+      flashcardDb.get(`SELECT *
+                      FROM Flashcards
+                      WHERE row_id = ?`, [randomCards],
+          (err, rowData2) => {
+
+            if (err) {
+              console.log("Error occurred in hasCardCallback function. Error is:", err);
+            } else {
+              console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData2);
          
           // update the numShow in the database 
       let totalShow = rowData2.num_show + 1;
-      let sqlUpdate = `UPDATE Flashcards 
-                       SET num_show=? `,[totalShow];
-      flashcardDb.run(sqlUpdate, (err, updateRow) =>{
+      
+      flashcardDb.run(`UPDATE Flashcards 
+                      SET num_show=? `,[totalShow], 
+                      
+    (err, updateRow) =>{
         if (err) {
           console.log("Error occurred in hasCardCallback function. Error is:", err);
         } else {
           console.log("The row has been updated! it is now ", updateRow);
         }
        }); // the end of flashCardDb.run
-       
+
      // function call to make sure it update the row
       // put value in from the second cards into the JSON and send it
         let getCard = {
@@ -215,6 +225,8 @@ function getCardHandler(req,res) {
     res.json({"getCard": getCard});
    }
   }); // the end of flashcardDB.Get
+}
+}
 }
 
 
