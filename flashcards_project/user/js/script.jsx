@@ -264,6 +264,9 @@ class ReviewCardFront extends React.Component {
   render() {
     return (
       <div className="card-side side-front">
+        <div className="flip-icon">
+          <img src="assets/refresh.png" />
+        </div>
         <div className="card-side-container">
           <h2 id="trans">{this.props.text}</h2>
         </div>
@@ -284,6 +287,12 @@ class ReviewCardBack extends React.Component {
   render() {
     return (
       <div className="card-side side-back">
+        <div
+          // TODO: this
+          className="flip-icon"
+        >
+          <img src="assets/refresh.png" />
+        </div>
         <div className="card-side-container">
           <h2 id="congrats">{this.props.text}</h2>
         </div>
@@ -387,15 +396,15 @@ class ReviewCards extends React.Component {
    * Requests a card from the server.
    */
   requestCard() {
-    let request = new XMLHttpRequest();
-    // TODO: change url if branny & andy use a different one
-    request.open("GET", "/getcard", true);
-    request.onload = () => {
-      let response = JSON.parse(request.responseText);
-      this.setState({ card: response, flipped: false });
-    };
-    request.onerror = () => alert("There was an error requesting a card.");
-    request.send();
+    // TODO: uncomment when ready
+    // let request = new XMLHttpRequest();
+    // request.open("GET", "/getcard", true);
+    // request.onload = () => {
+    //   let response = JSON.parse(request.responseText);
+    //   this.setState({ card: response, flipped: false });
+    // };
+    // request.onerror = () => alert("There was an error requesting a card.");
+    // request.send();
   }
 
   /*
@@ -414,17 +423,18 @@ class ReviewCards extends React.Component {
    * Sends the answer result to the server.
    */
   sendResult() {
-    let request = new XMLHttpRequest();
-    request.open(
-      "POST",
-      `/putresult?unique_identifier=${
-        this.state.card.unique_identifier
-      }&result=${this.correct()}`,
-      true
-    );
-    request.onload = () => undefined;
-    request.onerror = () => alert("There was an error sending the result.");
-    request.send();
+    // TODO: uncomment when ready
+    // let request = new XMLHttpRequest();
+    // request.open(
+    //   "POST",
+    //   `/putresult?unique_identifier=${
+    //     this.state.card.unique_identifier
+    //   }&result=${this.correct()}`,
+    //   true
+    // );
+    // request.onload = () => undefined;
+    // request.onerror = () => alert("There was an error sending the result.");
+    // request.send();
   }
 
   /*
@@ -473,7 +483,6 @@ class MainScreen extends React.Component {
   }
 
   componentDidMount() {
-    // TODO: check if this works
     let request = new XMLHttpRequest();
     request.open("GET", "/hascard", true);
 
