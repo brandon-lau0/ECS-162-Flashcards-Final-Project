@@ -120,20 +120,21 @@ function usernameHandler(req, res) {
 function hasCardHandler(req,res) {
   
   let searchCmdStr = `SELECT count(user_id) FROM Flashcards WHERE google_id = ${req.user.google_id}`;
-    flashcardDb.get(searchCmdStr, getUserInfoCallback);
+    flashcardDb.get(searchCmdStr, hasCardCallback);
 
-    function getUserInfoCallback(err, rowData) {
+    function hasCardCallback(err, rowData) {
       if (err) {
-        console.log("Error occurred in getUserInfoCallback function. Error is:", err);
+        console.log("Error occurred in hasCardCallback function. Error is:", err);
       } else {
-        console.log("Successfully retrieved user info from database. Received:", rowData);
-        let x;
+        console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData);
+
+        let hasFlashcards;
         if (rowData['count(user_id)'] > 0){
-           x = "True";
+           hasFlashcards = "true";
         } else {
-           x = "False";
+           hasFlashcards = "false";
         }
-        res.json({"hasCard": x});
+        res.json({"hasCard": hasFlashcards});
     }
 }
 }
