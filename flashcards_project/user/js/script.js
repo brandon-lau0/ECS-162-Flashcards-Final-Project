@@ -202,8 +202,7 @@ var CreationCards = function (_React$Component4) {
         var input = document.getElementById(_this5.props.inputId).value;
 
         event.preventDefault();
-        requestTranslation(input, function (translation) {
-          console.log(input + "\n" + translation);
+        requestTranslation(input.trim(), function (translation) {
           _this5.setState({ tlText: translation });
         });
       }
@@ -223,7 +222,8 @@ var CreationCards = function (_React$Component4) {
       var en = document.getElementById(_this5.props.inputId).value;
       var tl = document.getElementById(_this5.props.outputId).innerText;
 
-      saveCard(en, tl);
+      // trim tl just in case
+      saveCard(en.trim(), tl.trim());
 
       document.getElementById(_this5.props.inputId).value = "";
       _this5.setState({ tlText: "" });
@@ -389,13 +389,45 @@ var ReviewCardFront = function (_React$Component5) {
 }(React.Component);
 
 /*
+ * React component for the green correct box.
+ */
+
+
+var ReviewCorrect = function (_React$Component6) {
+  _inherits(ReviewCorrect, _React$Component6);
+
+  function ReviewCorrect(props) {
+    _classCallCheck(this, ReviewCorrect);
+
+    return _possibleConstructorReturn(this, (ReviewCorrect.__proto__ || Object.getPrototypeOf(ReviewCorrect)).call(this, props));
+  }
+
+  _createClass(ReviewCorrect, [{
+    key: "render",
+    value: function render() {
+      // TODO: correct box
+      return React.createElement(
+        "div",
+        { className: "review-correct helvetica" },
+        React.createElement(
+          "span",
+          null,
+          "CORRECT!"
+        )
+      );
+    }
+  }]);
+
+  return ReviewCorrect;
+}(React.Component);
+/*
  * React component for the back side of the card.
  * https://reactjsexample.com/react-flipping-card-with-tutorial/
  */
 
 
-var ReviewCardBack = function (_React$Component6) {
-  _inherits(ReviewCardBack, _React$Component6);
+var ReviewCardBack = function (_React$Component7) {
+  _inherits(ReviewCardBack, _React$Component7);
 
   function ReviewCardBack(props) {
     _classCallCheck(this, ReviewCardBack);
@@ -411,16 +443,13 @@ var ReviewCardBack = function (_React$Component6) {
         { className: "card-side side-back" },
         React.createElement(
           "div",
-          {
-            // TODO: this
-            className: "flip-icon"
-          },
+          { className: "flip-icon" },
           React.createElement("img", { src: "assets/refresh.png" })
         ),
         React.createElement(
           "div",
           { className: "card-side-container" },
-          React.createElement(
+          this.props.correct ? React.createElement(ReviewCorrect, null) : React.createElement(
             "h2",
             { id: "congrats" },
             this.props.text
@@ -439,8 +468,8 @@ var ReviewCardBack = function (_React$Component6) {
  */
 
 
-var ReviewCard = function (_React$Component7) {
-  _inherits(ReviewCard, _React$Component7);
+var ReviewCard = function (_React$Component8) {
+  _inherits(ReviewCard, _React$Component8);
 
   function ReviewCard(props) {
     _classCallCheck(this, ReviewCard);
@@ -479,41 +508,36 @@ var ReviewCard = function (_React$Component7) {
  */
 
 
-var ReviewCards = function (_React$Component8) {
-  _inherits(ReviewCards, _React$Component8);
+var ReviewCards = function (_React$Component9) {
+  _inherits(ReviewCards, _React$Component9);
 
   // PROPS should contain textId and inputId
   function ReviewCards(props) {
     _classCallCheck(this, ReviewCards);
 
-    // TODO: uncomment
-    // this.state = { card: undefined, flipped: false};
-    var _this9 = _possibleConstructorReturn(this, (ReviewCards.__proto__ || Object.getPrototypeOf(ReviewCards)).call(this, props));
+    var _this10 = _possibleConstructorReturn(this, (ReviewCards.__proto__ || Object.getPrototypeOf(ReviewCards)).call(this, props));
 
-    _this9.onKeyDown = function (event) {
+    _this10.onKeyDown = function (event) {
       if (event.key == "Enter") {
         event.preventDefault();
-        _this9.maybeFlip();
+        _this10.maybeFlip();
       }
     };
 
-    _this9.cardOnClick = function () {
-      _this9.maybeFlip();
+    _this10.cardOnClick = function () {
+      _this10.maybeFlip();
     };
 
-    _this9.buttonOnClick = function () {
-      if (_this9.state.flipped) {
-        _this9.requestCard();
+    _this10.buttonOnClick = function () {
+      if (_this10.state.flipped) {
+        _this10.requestCard();
       } else {
         alert("Flip the card first!");
       }
     };
 
-    _this9.state = {
-      card: { englishText: "no", translatedText: "fuck" },
-      flipped: false
-    };
-    return _this9;
+    _this10.state = { card: undefined, flipped: false };
+    return _this10;
   }
 
   _createClass(ReviewCards, [{
@@ -575,7 +599,6 @@ var ReviewCards = function (_React$Component8) {
   }, {
     key: "requestCard",
     value: function requestCard() {}
-    // TODO: uncomment when ready
     // let request = new XMLHttpRequest();
     // request.open("GET", "/getcard", true);
     // request.onload = () => {
@@ -594,7 +617,7 @@ var ReviewCards = function (_React$Component8) {
     key: "correct",
     value: function correct() {
       var inputElement = document.getElementById(this.props.inputId);
-      return inputElement && this.state.card && this.state.card.translatedText == inputElement.value;
+      return inputElement && this.state.card && this.state.card.translatedText == inputElement.value.trim();
     }
 
     /*
@@ -603,20 +626,17 @@ var ReviewCards = function (_React$Component8) {
 
   }, {
     key: "sendResult",
-    value: function sendResult() {}
-    // TODO: uncomment when ready
-    // let request = new XMLHttpRequest();
-    // request.open(
-    //   "POST",
-    //   `/putresult?unique_identifier=${
-    //     this.state.card.unique_identifier
-    //   }&result=${this.correct()}`,
-    //   true
-    // );
-    // request.onload = () => undefined;
-    // request.onerror = () => alert("There was an error sending the result.");
-    // request.send();
-
+    value: function sendResult() {
+      var request = new XMLHttpRequest();
+      request.open("POST", "/putresult?unique_identifier=" + this.state.card.unique_identifier + "&result=" + this.correct(), true);
+      request.onload = function () {
+        return undefined;
+      };
+      request.onerror = function () {
+        return alert("There was an error sending the result.");
+      };
+      request.send();
+    }
 
     /*
      * Flips the card and sends whether the user got the answer correct
@@ -644,34 +664,34 @@ var ReviewCards = function (_React$Component8) {
  */
 
 
-var MainScreen = function (_React$Component9) {
-  _inherits(MainScreen, _React$Component9);
+var MainScreen = function (_React$Component10) {
+  _inherits(MainScreen, _React$Component10);
 
   function MainScreen(props) {
     _classCallCheck(this, MainScreen);
 
-    var _this10 = _possibleConstructorReturn(this, (MainScreen.__proto__ || Object.getPrototypeOf(MainScreen)).call(this, props));
+    var _this11 = _possibleConstructorReturn(this, (MainScreen.__proto__ || Object.getPrototypeOf(MainScreen)).call(this, props));
 
-    _this10.buttonOnClick = function () {
-      _this10.setState({ reviewing: !_this10.state.reviewing });
+    _this11.buttonOnClick = function () {
+      _this11.setState({ reviewing: !_this11.state.reviewing });
     };
 
-    _this10.state = { reviewing: false };
+    _this11.state = { reviewing: false };
     // this.state = { reviewing: true };
-    return _this10;
+    return _this11;
   }
 
   _createClass(MainScreen, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this11 = this;
+      var _this12 = this;
 
       var request = new XMLHttpRequest();
       request.open("GET", "/hascard", true);
 
       request.onload = function () {
         var response = JSON.parse(request.responseText);
-        _this11.setState({ reviewing: response.hasCard });
+        _this12.setState({ reviewing: response.hasCard });
       };
       request.onerror = function () {
         return alert("There was an error contacting the server.");

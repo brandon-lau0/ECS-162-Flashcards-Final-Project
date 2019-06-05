@@ -210,8 +210,7 @@ class CreationCards extends React.Component {
       const input = document.getElementById(this.props.inputId).value;
 
       event.preventDefault();
-      requestTranslation(input, translation => {
-        console.log(`${input}\n${translation}`);
+      requestTranslation(input.trim(), translation => {
         this.setState({ tlText: translation });
       });
     }
@@ -237,7 +236,8 @@ class CreationCards extends React.Component {
     const en = document.getElementById(this.props.inputId).value;
     const tl = document.getElementById(this.props.outputId).innerText;
 
-    saveCard(en, tl);
+    // trim tl just in case
+    saveCard(en.trim(), tl.trim());
 
     document.getElementById(this.props.inputId).value = "";
     this.setState({ tlText: "" });
@@ -276,6 +276,23 @@ class ReviewCardFront extends React.Component {
 }
 
 /*
+ * React component for the green correct box.
+ */
+class ReviewCorrect extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    // TODO: correct box
+    return (
+      <div className="review-correct helvetica">
+        <span>CORRECT!</span>
+      </div>
+    );
+  }
+}
+/*
  * React component for the back side of the card.
  * https://reactjsexample.com/react-flipping-card-with-tutorial/
  */
@@ -287,14 +304,15 @@ class ReviewCardBack extends React.Component {
   render() {
     return (
       <div className="card-side side-back">
-        <div
-          // TODO: this
-          className="flip-icon"
-        >
+        <div className="flip-icon">
           <img src="assets/refresh.png" />
         </div>
         <div className="card-side-container">
-          <h2 id="congrats">{this.props.text}</h2>
+          {this.props.correct ? (
+            <ReviewCorrect />
+          ) : (
+            <h2 id="congrats">{this.props.text}</h2>
+          )}
         </div>
       </div>
     );
@@ -338,12 +356,7 @@ class ReviewCards extends React.Component {
   // PROPS should contain textId and inputId
   constructor(props) {
     super(props);
-    // TODO: uncomment
-    // this.state = { card: undefined, flipped: false};
-    this.state = {
-      card: { englishText: "no", translatedText: "fuck" },
-      flipped: false
-    };
+    this.state = { card: undefined, flipped: false };
   }
 
   componentDidMount() {
@@ -396,7 +409,6 @@ class ReviewCards extends React.Component {
    * Requests a card from the server.
    */
   requestCard() {
-    // TODO: uncomment when ready
     // let request = new XMLHttpRequest();
     // request.open("GET", "/getcard", true);
     // request.onload = () => {
@@ -415,7 +427,7 @@ class ReviewCards extends React.Component {
     return (
       inputElement &&
       this.state.card &&
-      this.state.card.translatedText == inputElement.value
+      this.state.card.translatedText == inputElement.value.trim()
     );
   }
 
@@ -423,18 +435,17 @@ class ReviewCards extends React.Component {
    * Sends the answer result to the server.
    */
   sendResult() {
-    // TODO: uncomment when ready
-    // let request = new XMLHttpRequest();
-    // request.open(
-    //   "POST",
-    //   `/putresult?unique_identifier=${
-    //     this.state.card.unique_identifier
-    //   }&result=${this.correct()}`,
-    //   true
-    // );
-    // request.onload = () => undefined;
-    // request.onerror = () => alert("There was an error sending the result.");
-    // request.send();
+    let request = new XMLHttpRequest();
+    request.open(
+      "POST",
+      `/putresult?unique_identifier=${
+        this.state.card.unique_identifier
+      }&result=${this.correct()}`,
+      true
+    );
+    request.onload = () => undefined;
+    request.onerror = () => alert("There was an error sending the result.");
+    request.send();
   }
 
   /*
