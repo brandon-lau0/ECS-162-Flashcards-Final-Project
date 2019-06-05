@@ -51,6 +51,21 @@ h2 {
   perspective: 1000px;
 }
 
+.flip-icon {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.flip-icon > img {
+  /* the image isn't actually square */
+  margin-top: 0.3em;
+  margin-right: 0.5em;
+
+  width: 2em;
+  height: auto;
+}
+
 /*- Card body -*/
 .card-body {
   width: 100%;

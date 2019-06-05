@@ -264,6 +264,9 @@ class ReviewCardFront extends React.Component {
   render() {
     return (
       <div className="card-side side-front">
+        <div className="flip-icon">
+          <img src="assets/refresh.png" />
+        </div>
         <div className="card-side-container">
           <h2 id="trans">{this.props.text}</h2>
         </div>
@@ -284,6 +287,12 @@ class ReviewCardBack extends React.Component {
   render() {
     return (
       <div className="card-side side-back">
+        <div
+          // TODO: this
+          className="flip-icon"
+        >
+          <img src="assets/refresh.png" />
+        </div>
         <div className="card-side-container">
           <h2 id="congrats">{this.props.text}</h2>
         </div>
@@ -302,7 +311,6 @@ class ReviewCard extends React.Component {
   }
 
   render() {
-    console.log(this.props.flipped);
     return (
       <div
         className={`helvetica card-container ${
@@ -321,16 +329,21 @@ class ReviewCard extends React.Component {
     );
   }
 }
+
 /*
  * Component for review cards + button.
+ * This could be a mini god-object I swear.
  */
 class ReviewCards extends React.Component {
   // PROPS should contain textId and inputId
   constructor(props) {
     super(props);
     // TODO: uncomment
-    // this.state = { card: undefined };
-    this.state = { card: { english: "no", chinese: "fuck" }, flipped: false };
+    // this.state = { card: undefined, flipped: false};
+    this.state = {
+      card: { englishText: "no", translatedText: "fuck" },
+      flipped: false
+    };
   }
 
   componentDidMount() {
@@ -345,8 +358,13 @@ class ReviewCards extends React.Component {
       <section className="card-review">
         <div id="flip-card" onClick={this.cardOnClick}>
           <ReviewCard
-            frontText={this.state.card.chinese}
-            backText={this.state.card.english}
+            frontText={
+              (this.state.card && this.state.card.translatedText) ||
+              "Loading..."
+            }
+            backText={
+              (this.state.card && this.state.card.englishText) || "Loading..."
+            }
             correct={this.correct()}
             flipped={this.state.flipped}
           />
@@ -378,15 +396,15 @@ class ReviewCards extends React.Component {
    * Requests a card from the server.
    */
   requestCard() {
-    let request = new XMLHttpRequest();
-    // TODO: change url if branny & andy use a different one
-    request.open("GET", "/card", true);
-    request.onload = () => {
-      let response = JSON.parse(request.responseText);
-      this.setState({ card: response, flipped: false });
-    };
-    request.onerror = () => alert("There was an error requesting a card.");
-    request.send();
+    // TODO: uncomment when ready
+    // let request = new XMLHttpRequest();
+    // request.open("GET", "/getcard", true);
+    // request.onload = () => {
+    //   let response = JSON.parse(request.responseText);
+    //   this.setState({ card: response, flipped: false });
+    // };
+    // request.onerror = () => alert("There was an error requesting a card.");
+    // request.send();
   }
 
   /*
@@ -397,7 +415,7 @@ class ReviewCards extends React.Component {
     return (
       inputElement &&
       this.state.card &&
-      this.state.card.chinese == inputElement.value
+      this.state.card.translatedText == inputElement.value
     );
   }
 
@@ -405,39 +423,48 @@ class ReviewCards extends React.Component {
    * Sends the answer result to the server.
    */
   sendResult() {
-    let request = new XMLHttpRequest();
-    request.open(
-      "POST",
-      `/update?card=${this.state.card.identifier}&result=${this.correct()}`,
-      true
-    );
-    request.onload = () => undefined;
-    request.onerror = () => alert("There was an error sending the result.");
-    request.send();
+    // TODO: uncomment when ready
+    // let request = new XMLHttpRequest();
+    // request.open(
+    //   "POST",
+    //   `/putresult?unique_identifier=${
+    //     this.state.card.unique_identifier
+    //   }&result=${this.correct()}`,
+    //   true
+    // );
+    // request.onload = () => undefined;
+    // request.onerror = () => alert("There was an error sending the result.");
+    // request.send();
   }
 
   /*
-   * As its name suggests.
+   * Flips the card and sends whether the user got the answer correct
+   * to the server. Nothing happens if the card was already flipped.
    */
-  flipCard() {
-    this.setState({ flipped: !this.state.flipped });
+  maybeFlip() {
+    if (!this.state.flipped) {
+      this.setState({ flipped: true });
+      this.sendResult();
+    }
   }
 
   onKeyDown = event => {
     if (event.key == "Enter") {
       event.preventDefault();
-
-      this.setState({ flipped: true });
-      this.sendResult();
+      this.maybeFlip();
     }
   };
 
   cardOnClick = () => {
-    this.flipCard();
+    this.maybeFlip();
   };
 
   buttonOnClick = () => {
-    this.requestCard();
+    if (this.state.flipped) {
+      this.requestCard();
+    } else {
+      alert("Flip the card first!");
+    }
   };
 }
 
@@ -456,7 +483,16 @@ class MainScreen extends React.Component {
   }
 
   componentDidMount() {
-    // TODO: send API call to determine starting view
+    let request = new XMLHttpRequest();
+    request.open("GET", "/hascard", true);
+
+    request.onload = () => {
+      let response = JSON.parse(request.responseText);
+      this.setState({ reviewing: response.hasCard });
+    };
+    request.onerror = () => alert("There was an error contacting the server.");
+
+    request.send();
   }
 
   render() {

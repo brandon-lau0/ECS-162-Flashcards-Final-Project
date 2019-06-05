@@ -369,6 +369,11 @@ var ReviewCardFront = function (_React$Component5) {
         { className: "card-side side-front" },
         React.createElement(
           "div",
+          { className: "flip-icon" },
+          React.createElement("img", { src: "assets/refresh.png" })
+        ),
+        React.createElement(
+          "div",
           { className: "card-side-container" },
           React.createElement(
             "h2",
@@ -406,6 +411,14 @@ var ReviewCardBack = function (_React$Component6) {
         { className: "card-side side-back" },
         React.createElement(
           "div",
+          {
+            // TODO: this
+            className: "flip-icon"
+          },
+          React.createElement("img", { src: "assets/refresh.png" })
+        ),
+        React.createElement(
+          "div",
           { className: "card-side-container" },
           React.createElement(
             "h2",
@@ -438,7 +451,6 @@ var ReviewCard = function (_React$Component7) {
   _createClass(ReviewCard, [{
     key: "render",
     value: function render() {
-      console.log(this.props.flipped);
       return React.createElement(
         "div",
         {
@@ -460,8 +472,10 @@ var ReviewCard = function (_React$Component7) {
 
   return ReviewCard;
 }(React.Component);
+
 /*
  * Component for review cards + button.
+ * This could be a mini god-object I swear.
  */
 
 
@@ -473,27 +487,32 @@ var ReviewCards = function (_React$Component8) {
     _classCallCheck(this, ReviewCards);
 
     // TODO: uncomment
-    // this.state = { card: undefined };
+    // this.state = { card: undefined, flipped: false};
     var _this9 = _possibleConstructorReturn(this, (ReviewCards.__proto__ || Object.getPrototypeOf(ReviewCards)).call(this, props));
 
     _this9.onKeyDown = function (event) {
       if (event.key == "Enter") {
         event.preventDefault();
-
-        _this9.setState({ flipped: true });
-        _this9.sendResult();
+        _this9.maybeFlip();
       }
     };
 
     _this9.cardOnClick = function () {
-      _this9.flipCard();
+      _this9.maybeFlip();
     };
 
     _this9.buttonOnClick = function () {
-      _this9.requestCard();
+      if (_this9.state.flipped) {
+        _this9.requestCard();
+      } else {
+        alert("Flip the card first!");
+      }
     };
 
-    _this9.state = { card: { english: "no", chinese: "fuck" }, flipped: false };
+    _this9.state = {
+      card: { englishText: "no", translatedText: "fuck" },
+      flipped: false
+    };
     return _this9;
   }
 
@@ -515,8 +534,8 @@ var ReviewCards = function (_React$Component8) {
           "div",
           { id: "flip-card", onClick: this.cardOnClick },
           React.createElement(ReviewCard, {
-            frontText: this.state.card.chinese,
-            backText: this.state.card.english,
+            frontText: this.state.card && this.state.card.translatedText || "Loading...",
+            backText: this.state.card && this.state.card.englishText || "Loading...",
             correct: this.correct(),
             flipped: this.state.flipped
           })
@@ -555,21 +574,17 @@ var ReviewCards = function (_React$Component8) {
 
   }, {
     key: "requestCard",
-    value: function requestCard() {
-      var _this10 = this;
+    value: function requestCard() {}
+    // TODO: uncomment when ready
+    // let request = new XMLHttpRequest();
+    // request.open("GET", "/getcard", true);
+    // request.onload = () => {
+    //   let response = JSON.parse(request.responseText);
+    //   this.setState({ card: response, flipped: false });
+    // };
+    // request.onerror = () => alert("There was an error requesting a card.");
+    // request.send();
 
-      var request = new XMLHttpRequest();
-      // TODO: change url if branny & andy use a different one
-      request.open("GET", "/card", true);
-      request.onload = function () {
-        var response = JSON.parse(request.responseText);
-        _this10.setState({ card: response, flipped: false });
-      };
-      request.onerror = function () {
-        return alert("There was an error requesting a card.");
-      };
-      request.send();
-    }
 
     /*
      * Lazy name. Checks if the user input is correct.
@@ -579,7 +594,7 @@ var ReviewCards = function (_React$Component8) {
     key: "correct",
     value: function correct() {
       var inputElement = document.getElementById(this.props.inputId);
-      return inputElement && this.state.card && this.state.card.chinese == inputElement.value;
+      return inputElement && this.state.card && this.state.card.translatedText == inputElement.value;
     }
 
     /*
@@ -588,26 +603,33 @@ var ReviewCards = function (_React$Component8) {
 
   }, {
     key: "sendResult",
-    value: function sendResult() {
-      var request = new XMLHttpRequest();
-      request.open("POST", "/update?card=" + this.state.card.identifier + "&result=" + this.correct(), true);
-      request.onload = function () {
-        return undefined;
-      };
-      request.onerror = function () {
-        return alert("There was an error sending the result.");
-      };
-      request.send();
-    }
+    value: function sendResult() {}
+    // TODO: uncomment when ready
+    // let request = new XMLHttpRequest();
+    // request.open(
+    //   "POST",
+    //   `/putresult?unique_identifier=${
+    //     this.state.card.unique_identifier
+    //   }&result=${this.correct()}`,
+    //   true
+    // );
+    // request.onload = () => undefined;
+    // request.onerror = () => alert("There was an error sending the result.");
+    // request.send();
+
 
     /*
-     * As its name suggests.
+     * Flips the card and sends whether the user got the answer correct
+     * to the server. Nothing happens if the card was already flipped.
      */
 
   }, {
-    key: "flipCard",
-    value: function flipCard() {
-      this.setState({ flipped: !this.state.flipped });
+    key: "maybeFlip",
+    value: function maybeFlip() {
+      if (!this.state.flipped) {
+        this.setState({ flipped: true });
+        this.sendResult();
+      }
     }
   }]);
 
@@ -628,21 +650,34 @@ var MainScreen = function (_React$Component9) {
   function MainScreen(props) {
     _classCallCheck(this, MainScreen);
 
-    var _this11 = _possibleConstructorReturn(this, (MainScreen.__proto__ || Object.getPrototypeOf(MainScreen)).call(this, props));
+    var _this10 = _possibleConstructorReturn(this, (MainScreen.__proto__ || Object.getPrototypeOf(MainScreen)).call(this, props));
 
-    _this11.buttonOnClick = function () {
-      _this11.setState({ reviewing: !_this11.state.reviewing });
+    _this10.buttonOnClick = function () {
+      _this10.setState({ reviewing: !_this10.state.reviewing });
     };
 
-    _this11.state = { reviewing: false };
+    _this10.state = { reviewing: false };
     // this.state = { reviewing: true };
-    return _this11;
+    return _this10;
   }
 
   _createClass(MainScreen, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      // TODO: send API call to determine starting view
+      var _this11 = this;
+
+      var request = new XMLHttpRequest();
+      request.open("GET", "/hascard", true);
+
+      request.onload = function () {
+        var response = JSON.parse(request.responseText);
+        _this11.setState({ reviewing: response.hasCard });
+      };
+      request.onerror = function () {
+        return alert("There was an error contacting the server.");
+      };
+
+      request.send();
     }
   }, {
     key: "render",
