@@ -596,16 +596,20 @@ var ReviewCards = function (_React$Component9) {
 
   }, {
     key: "requestCard",
-    value: function requestCard() {}
-    // let request = new XMLHttpRequest();
-    // request.open("GET", "/getcard", true);
-    // request.onload = () => {
-    //   let response = JSON.parse(request.responseText);
-    //   this.setState({ card: response, flipped: false });
-    // };
-    // request.onerror = () => alert("There was an error requesting a card.");
-    // request.send();
+    value: function requestCard() {
+      var _this11 = this;
 
+      var request = new XMLHttpRequest();
+      request.open("GET", "/getcard", true);
+      request.onload = function () {
+        var response = JSON.parse(request.responseText);
+        _this11.setState({ card: response, flipped: false });
+      };
+      request.onerror = function () {
+        return alert("There was an error requesting a card.");
+      };
+      request.send();
+    }
 
     /*
      * Lazy name. Checks if the user input is correct.
@@ -668,28 +672,28 @@ var MainScreen = function (_React$Component10) {
   function MainScreen(props) {
     _classCallCheck(this, MainScreen);
 
-    var _this11 = _possibleConstructorReturn(this, (MainScreen.__proto__ || Object.getPrototypeOf(MainScreen)).call(this, props));
+    var _this12 = _possibleConstructorReturn(this, (MainScreen.__proto__ || Object.getPrototypeOf(MainScreen)).call(this, props));
 
-    _this11.buttonOnClick = function () {
-      _this11.setState({ reviewing: !_this11.state.reviewing });
+    _this12.buttonOnClick = function () {
+      _this12.setState({ reviewing: !_this12.state.reviewing });
     };
 
-    _this11.state = { reviewing: false };
+    _this12.state = { reviewing: false };
     // this.state = { reviewing: true };
-    return _this11;
+    return _this12;
   }
 
   _createClass(MainScreen, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this12 = this;
+      var _this13 = this;
 
       var request = new XMLHttpRequest();
       request.open("GET", "/hascard", true);
 
       request.onload = function () {
         var response = JSON.parse(request.responseText);
-        _this12.setState({ reviewing: response.hasCard });
+        _this13.setState({ reviewing: response.hasCard });
       };
       request.onerror = function () {
         return alert("There was an error contacting the server.");

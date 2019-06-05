@@ -407,14 +407,14 @@ class ReviewCards extends React.Component {
    * Requests a card from the server.
    */
   requestCard() {
-    // let request = new XMLHttpRequest();
-    // request.open("GET", "/getcard", true);
-    // request.onload = () => {
-    //   let response = JSON.parse(request.responseText);
-    //   this.setState({ card: response, flipped: false });
-    // };
-    // request.onerror = () => alert("There was an error requesting a card.");
-    // request.send();
+    let request = new XMLHttpRequest();
+    request.open("GET", "/getcard", true);
+    request.onload = () => {
+      let response = JSON.parse(request.responseText);
+      this.setState({ card: response, flipped: false });
+    };
+    request.onerror = () => alert("There was an error requesting a card.");
+    request.send();
   }
 
   /*
