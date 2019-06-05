@@ -264,7 +264,11 @@ function getCardHandler(req, res) {
                         );
                       } else {
                         // don't show the card, need to find a different card
-                        
+                        res.json(
+                          {
+                            "need_to_show_a_different_card" : "not_implemented_yet"
+                          }
+                        )
                       }
                       
                     }
