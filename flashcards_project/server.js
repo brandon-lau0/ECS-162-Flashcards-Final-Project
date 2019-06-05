@@ -107,8 +107,6 @@ function translateTextHandler(req, res, next) {
 }
 
 function usernameHandler(req, res) {
-
-  //console.log("This is Request!!!!: ", req)
   console.log("This is user in the USERNAME HANDLER: ", req.user)
   console.log("This is user.FirstName in the USERNAME HANDLER: ", req.user.firstName)
   console.log("This is user.LastName in the USERNAME HANDLER: ", req.user.lastName)
@@ -122,19 +120,19 @@ function hasCardHandler(req, res) {
   let searchCmdStr = `SELECT count(user_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
   flashcardDb.get(searchCmdStr, hasCardCallback);
 
-    function hasCardCallback(err, rowData) {
-      if (err) {
-        console.log("Error occurred in hasCardCallback function. Error is:", err);
+  function hasCardCallback(err, rowData) {
+    if (err) {
+      console.log("Error occurred in hasCardCallback function. Error is:", err);
+    } else {
+      console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData);
+  
+      let hasFlashcards;
+      if (rowData['count(user_id)'] > 0) {
+         hasFlashcards = true;
       } else {
-        console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData);
-
-        let hasFlashcards;
-        if (rowData['count(user_id)'] > 0){
-           hasFlashcards = true;
-        } else {
-           hasFlashcards = false;
-        }
-        res.json({"hasCard": hasFlashcards});
+         hasFlashcards = false;
+      }
+      res.json({"hasCard": hasFlashcards});
     }
   }
 }
@@ -172,15 +170,133 @@ function putResultHandler(req, res, next) {
   }
 }
 
+function getCardHandler(req, res) {
+  /**
+   * The get() method executes an SQL query and calls the callback function on the first result row. 
+   * In case the result set is empty, the row argument is undefined.
+   * USE GET WHEN When you know that the result set contains zero or one row
+   */
+
+  // let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
+  let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = 114003422437955620000`; // FIXME: remove this line and uncomment above line after
+
+  flashcardDb.get(searchCmdStr, getCardCallback);
+
+  function getCardCallback(err, rowData) {
+    if (err) {
+      console.log("Error occurred in getCardCallback function. Error is:", err);
+    } else {
+      console.log("Successfully retrieved user's flashcards from database. Received:", rowData);
+
+      console.log("User currently has this many flashcards in database:", rowData['count(row_id)']);
+
+      // let array_of_cards = new Array(rowData['count(row_id)']);
+      let array_of_cards = [];
+
+      // let rowIDCmdStr = `SELECT row_id FROM Flashcards WHERE user_id = ${req.user.google_id}`;
+      let rowIDCmdStr = `SELECT row_id FROM Flashcards WHERE user_id = 114003422437955620000`; // FIXME: remove this line and uncomment above line after
+      
+      /**
+       * http://www.sqlitetutorial.net/sqlite-nodejs/query/ reference
+       */
+      flashcardDb.all(rowIDCmdStr, (err, rowData) => {
+        if (err) {
+          console.log("Error occurred in flashcardDb.each call. Error is:", err);          
+        } else {
+          console.log("ROW DATA is:", rowData);
+
+          // Loop through all the flashcards and assign the row_id of each flashcard into the array
+          for (let i = 0; i < rowData.length; i++) {
+            array_of_cards[i] = rowData[i].row_id;
+            console.log("Inserted " + rowData[i].row_id + " into the array_of_cards");
+            console.log("The array currently contains:", array_of_cards);
+          }
+
+          let randNum = Math.floor((Math.random() * array_of_cards.length));
+          let aRandomCardRowID = array_of_cards[randNum];
+
+          flashcardDb.get(`SELECT *
+                          FROM Flashcards
+                          WHERE row_id = ?`, [aRandomCardRowID],
+            (err, rowData2) => {
+
+              if (err) {
+                console.log("Error occurred in getting the Flashcard Table's columns corresponding to aRandomCardRowID. Error is:", err);
+              } else {
+                console.log("Successfully retrieved the Flashcard Table's columns corresponding to aRandomCardRowID from database. Received:", rowData2);
+      
+                // update the numShow in the database 
+                let totalShow = rowData2.num_show + 1;
+
+                // function call to make sure it update the row
+                flashcardDb.run(`UPDATE Flashcards SET num_show = ? WHERE row_id = ?`,[totalShow, aRandomCardRowID], 
+                                              
+                  (err, updateRow) => {
+                    if (err) {
+                      console.log("Error occurred in updating the num_show for the flashcard. Error is:", err);
+                    } else {
+                      console.log("The num_show for the flashcard has been updated!");
 
 
+                      console.log("num_correct:", rowData2.num_correct);
+                      console.log("num_show:", rowData2.num_show);
+
+                      let computedScore;
+
+                      if (rowData2.num_show == 0) {
+                        computedScore = Math.max(1,5-rowData2.num_correct) + Math.max(1,5-rowData2.num_show);
+                      } else {
+                        computedScore = Math.max(1,5-rowData2.num_correct) + Math.max(1,5-rowData2.num_show) + 5*( (rowData2.num_show-rowData2.num_correct)/rowData2.num_show);
+                      }
+
+                      console.log("Score is:", computedScore);
+
+                      let randNum2 = Math.floor((Math.random() * 16)); // random number [0, 15]
+
+                      if (randNum2 <= computedScore) {
+                        // show the card
+                        res.json(
+                          {
+                            "unique_identifier" : rowData2.row_id,
+                            "englishText" : rowData2.english_text,
+                            "translatedText": rowData2.trans_text
+                          }
+                        );
+                      } else {
+                        // don't show the card, need to find a different card
+                        
+                      }
+                      
+                    }
+                  }
+                ); // the end of flashCardDb.run
+
+              }
+          }); // the end of flashcardDb.Get
+
+
+
+
+
+
+
+
+
+
+
+          
+        }
+      });
+    }
+  } // getCardCallback
+} // getCardHandler
 
 
 function fileNotFound(req, res) {
-    let url = req.url;
-    res.type('text/plain');
-    res.status(404);
-    res.send('Cannot find ' + url);
+  let url = req.url;
+  res.type('text/plain');
+  res.status(404);
+  res.send('Cannot find ' + url);
 }
 
 // ====================================== LOGIN CODE =========================================
@@ -278,10 +394,6 @@ app.get('/auth/accepted',
           }
         }
       }
-
-
-
-      
   });
 
 app.use(express.static('public'));  // can I find a static file?
@@ -295,7 +407,8 @@ app.get('/user/*',
        ); 
 
 app.get('/username', usernameHandler);
-app.get('/hascards', hasCardHandler);
+app.get('/hascard', hasCardHandler);
+app.get('/getcard', getCardHandler);
 app.post('/putsesult', putResultHandler);
 app.get('/translate', translateTextHandler);
 app.post('/store', queryHandler);   // if not, is it a valid query?

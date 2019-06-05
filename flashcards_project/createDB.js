@@ -18,7 +18,7 @@ const flashcardDb = new sqlite3.Database(flashcardsDbFileName,
 // Fix the error by removing or renaming Flashcards.db
 
 /**************************************CREATING TABLE *******************************/
-const flashcardsCmdStr = 'CREATE TABLE Flashcards (user_id INT, english_text VARCHAR(500), trans_text VARCHAR(500), num_show INT, num_correct INT)';
+const flashcardsCmdStr = 'CREATE TABLE Flashcards (user_id INT, row_id INTEGER PRIMARY KEY AUTOINCREMENT, english_text VARCHAR(500), trans_text VARCHAR(500), num_show INT, num_correct INT)';
 flashcardDb.run(flashcardsCmdStr, flashcardsTableCreationCallback);
 
 function flashcardsTableCreationCallback(err) {
