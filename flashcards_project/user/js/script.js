@@ -405,7 +405,6 @@ var ReviewCorrect = function (_React$Component6) {
   _createClass(ReviewCorrect, [{
     key: "render",
     value: function render() {
-      // TODO: correct box
       return React.createElement(
         "div",
         { className: "review-correct helvetica" },
@@ -489,9 +488,8 @@ var ReviewCard = function (_React$Component8) {
           "div",
           { className: "card-body" },
           React.createElement(ReviewCardBack, {
-            text: this.props.backText
-            // TODO:
-            , correct: this.props.correct
+            text: this.props.backText,
+            correct: this.props.correct
           }),
           React.createElement(ReviewCardFront, { text: this.props.frontText })
         )
