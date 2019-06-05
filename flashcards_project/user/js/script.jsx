@@ -370,11 +370,13 @@ class ReviewCards extends React.Component {
         <div id="flip-card" onClick={this.cardOnClick}>
           <ReviewCard
             frontText={
-              (this.state.card && this.state.card.translatedText) ||
-              "Loading..."
+              (this.state.card && this.state.card.translatedText) || ""
             }
             backText={
-              (this.state.card && this.state.card.englishText) || "Loading..."
+              (this.state.card &&
+                this.state.flipped &&
+                this.state.card.englishText) ||
+              ""
             }
             correct={this.correct()}
             flipped={this.state.flipped}
@@ -425,7 +427,7 @@ class ReviewCards extends React.Component {
     return (
       inputElement &&
       this.state.card &&
-      this.state.card.translatedText == inputElement.value.trim()
+      this.state.card.englishText == inputElement.value.trim()
     );
   }
 
@@ -471,6 +473,7 @@ class ReviewCards extends React.Component {
   buttonOnClick = () => {
     if (this.state.flipped) {
       this.requestCard();
+      document.getElementById(this.props.inputId).value = "";
     } else {
       alert("Flip the card first!");
     }

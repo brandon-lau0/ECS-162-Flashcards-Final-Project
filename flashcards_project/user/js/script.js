@@ -529,6 +529,7 @@ var ReviewCards = function (_React$Component9) {
     _this10.buttonOnClick = function () {
       if (_this10.state.flipped) {
         _this10.requestCard();
+        document.getElementById(_this10.props.inputId).value = "";
       } else {
         alert("Flip the card first!");
       }
@@ -556,8 +557,8 @@ var ReviewCards = function (_React$Component9) {
           "div",
           { id: "flip-card", onClick: this.cardOnClick },
           React.createElement(ReviewCard, {
-            frontText: this.state.card && this.state.card.translatedText || "Loading...",
-            backText: this.state.card && this.state.card.englishText || "Loading...",
+            frontText: this.state.card && this.state.card.translatedText || "",
+            backText: this.state.card && this.state.flipped && this.state.card.englishText || "",
             correct: this.correct(),
             flipped: this.state.flipped
           })
@@ -619,7 +620,7 @@ var ReviewCards = function (_React$Component9) {
     key: "correct",
     value: function correct() {
       var inputElement = document.getElementById(this.props.inputId);
-      return inputElement && this.state.card && this.state.card.translatedText == inputElement.value.trim();
+      return inputElement && this.state.card && this.state.card.englishText == inputElement.value.trim();
     }
 
     /*
