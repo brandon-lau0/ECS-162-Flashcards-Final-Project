@@ -234,7 +234,6 @@ function getCardHandler(req, res) {
    */
 
   let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
-  // let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = 114003422437955620000`;
 
   flashcardDb.get(searchCmdStr, getCardCallback);
 
@@ -256,7 +255,6 @@ function getCardHandler(req, res) {
       let array_of_cards = [];
 
       let rowIDCmdStr = `SELECT row_id FROM Flashcards WHERE user_id = ${req.user.google_id}`;
-      // let rowIDCmdStr = `SELECT row_id FROM Flashcards WHERE user_id = 114003422437955620000`;
 
       /**
        * http://www.sqlitetutorial.net/sqlite-nodejs/query/ reference
@@ -281,7 +279,6 @@ function getCardHandler(req, res) {
 
           let randNum = Math.floor(Math.random() * array_of_cards.length);
           let aRandomCardRowID = array_of_cards[randNum];
-          // 114003422437955620000
           // get all the cards from one user and put it into array.
           flashcardDb.all(
             `SELECT *
