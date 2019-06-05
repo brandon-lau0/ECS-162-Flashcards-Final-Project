@@ -143,25 +143,40 @@ function putResultHandler(req, res, next) {
     qObj contains:
     {
       unique_identifier: 000,
-      result: "String of user's answer"
+      result: "true or false depending whether or not user's answer is correct or not"
     }
   */
 
   if (qObj != undefined) {
-    let searchCmdStr = `SELECT english_text FROM Flashcards WHERE row_id = ${qObj.unique_identifier}`;
-    flashcardDb.get(searchCmdStr, checkResultCallback);
+    if (qObj.result == 'false') {
+      console.log("User's answer was incorrect, no need to update num_correct in database");
+      res.json({});
+    } else {
+      console.log("User's answer was correct, updating num_correct in database...");
 
-    function checkResultCallback(err, rowData) {
-      if (err) {
-        console.log("Error occurred in checkResultCallback function. Error is:", err);
-      } else {
-        console.log("Successfully found the english_text from database. Received:", rowData);
+      let searchCmdStr = `SELECT num_correct FROM Flashcards WHERE row_id = ${Number(qObj.unique_identifier)}`;
+      flashcardDb.get(searchCmdStr, checkResultCallback);
 
-        if (rowData.english_text == qObj.result) {
-          // FIXME: NEED TO UPDATE CORRECT VAR IN DB BEFORE SENDING JSON BACK TO BROWSER
-          res.json({"unique_identifier": qObj.unique_identifier, "result": "true"});
+      function checkResultCallback(err, rowData) {
+        if (err) {
+          console.log("Error occurred in checkResultCallback function. Error is:", err);
         } else {
-          res.json({"unique_identifier": qObj.unique_identifier, "result": "false"});
+          console.log("Successfully found num_correct from database. Received:", rowData);
+
+          let total_num_correct = rowData.num_correct + 1;
+
+          let updateCmdStr = `UPDATE Flashcards SET num_correct = ${total_num_correct} WHERE row_id = ${Number(qObj.unique_identifier)}`;
+
+          flashcardDb.run(updateCmdStr, updateCallback);
+
+          function updateCallback(err) {
+            if (err) {
+              console.log("Error occurred in updating the num_correct for the user in the database. Error is:", err);
+            } else {
+              console.log("Successfully updated the num_correct for this user to " + total_num_correct + " in the database");
+              res.json({});
+            }
+          }
         }
       }
     }
@@ -231,7 +246,7 @@ function getCardHandler(req, res) {
                 // function call to make sure it update the row
                 flashcardDb.run(`UPDATE Flashcards SET num_show = ? WHERE row_id = ?`,[totalShow, aRandomCardRowID], 
                                               
-                  (err, updateRow) => {
+                  (err) => {
                     if (err) {
                       console.log("Error occurred in updating the num_show for the flashcard. Error is:", err);
                     } else {
@@ -413,7 +428,7 @@ app.get('/user/*',
 app.get('/username', usernameHandler);
 app.get('/hascard', hasCardHandler);
 app.get('/getcard', getCardHandler);
-app.post('/putsesult', putResultHandler);
+app.post('/putresult', putResultHandler);
 app.get('/translate', translateTextHandler);
 app.post('/store', queryHandler);   // if not, is it a valid query?
 app.use( fileNotFound );            // otherwise not found
