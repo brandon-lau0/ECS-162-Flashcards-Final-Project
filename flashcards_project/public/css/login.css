@@ -52,7 +52,7 @@ main {
 #login-button {
   display: flex;
   flex-direction: row;
-
+  cursor: pointer;
   width: 15em;
 
   padding-left: 0;
