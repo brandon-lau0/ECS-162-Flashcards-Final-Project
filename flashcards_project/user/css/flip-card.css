@@ -51,21 +51,6 @@ h2 {
   perspective: 1000px;
 }
 
-.flip-icon {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-}
-
-.flip-icon > img {
-  /* the image isn't actually square */
-  margin-top: 0.3em;
-  margin-right: 0.5em;
-
-  width: 2em;
-  height: auto;
-}
-
 /*- Card body -*/
 .card-body {
   width: 100%;
@@ -151,4 +136,48 @@ textarea {
 #congrats,
 #trans {
   font-size: 1.2em;
+}
+
+.flip-icon {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.flip-icon > img {
+  /* the image isn't actually square */
+  margin-top: 0.3em;
+  margin-right: 0.5em;
+
+  width: 2em;
+  height: auto;
+}
+
+.review-correct {
+  font-size: 1.7em;
+  font-weight: bold;
+
+  background-color: #d6ffb1;
+  color: #6aaf47;
+
+  border: 1px solid #6aaf47;
+
+  height: 45%;
+  width: 75%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media only screen and (min-width: 481px) and (max-width: 800px) {
+  .review-correct {
+    width: 60%;
+  }
+}
+
+@media only screen and (min-width: 801px) {
+  .review-correct {
+    width: 50%;
+  }
 }

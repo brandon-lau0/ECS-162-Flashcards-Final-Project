@@ -45,7 +45,7 @@ function queryHandler(req, res, next) {
               return console.log("something is wrong cannot put the data to Database", err.message);
             }
             // get the last insert id
-            console.log(`A row has been inserted ${this.changes}`);
+            console.log(`A row has been inserted: ${this.changes}`);
             res.json({});
           });
   } else {
@@ -137,10 +137,53 @@ function hasCardHandler(req, res) {
   }
 }
 
-/**
- * The db.all() method allows you to execute an SQL query with specified parameters 
- * and call a callback to access the rows in the result set.
- */
+function putResultHandler(req, res, next) {
+  let qObj = req.query;
+  /*
+    qObj contains:
+    {
+      unique_identifier: 000,
+      result: "true or false depending whether or not user's answer is correct or not"
+    }
+  */
+
+  if (qObj != undefined) {
+    if (qObj.result == 'false') {
+      console.log("User's answer was incorrect, no need to update num_correct in database");
+      res.json({});
+    } else {
+      console.log("User's answer was correct, updating num_correct in database...");
+
+      let searchCmdStr = `SELECT num_correct FROM Flashcards WHERE row_id = ${Number(qObj.unique_identifier)}`;
+      flashcardDb.get(searchCmdStr, checkResultCallback);
+
+      function checkResultCallback(err, rowData) {
+        if (err) {
+          console.log("Error occurred in checkResultCallback function. Error is:", err);
+        } else {
+          console.log("Successfully found num_correct from database. Received:", rowData);
+
+          let total_num_correct = rowData.num_correct + 1;
+
+          let updateCmdStr = `UPDATE Flashcards SET num_correct = ${total_num_correct} WHERE row_id = ${Number(qObj.unique_identifier)}`;
+
+          flashcardDb.run(updateCmdStr, updateCallback);
+
+          function updateCallback(err) {
+            if (err) {
+              console.log("Error occurred in updating the num_correct for the user in the database. Error is:", err);
+            } else {
+              console.log("Successfully updated the num_correct for this user to " + total_num_correct + " in the database");
+              res.json({});
+            }
+          }
+        }
+      }
+    }
+  } else {
+    next();
+  }
+}
 
 function getCardHandler(req, res) {
   /**
@@ -241,13 +284,12 @@ function getCardHandler(req, res) {
                         );
                         break;
                       } else {
-                        // don't show the card, need to find a different card
-                        
-                      }             
-               }         
-        }
-     }); // the end of flashcardDb.Get 
-        }
+                        // don't show the card, need to find a different card  
+                        }             
+                    }         
+                }
+           }); // the end of flashcardDb.Get 
+      }
       });
     }
   } // getCardCallback
@@ -349,10 +391,10 @@ app.get('/auth/accepted',
           console.log("Successfully found whether or not user has/does not have flashcards in database:", rowData);
           if (rowData) {
             // user has flashcards
-            res.redirect('/user/flashcards.html'); // FIXME: Need to redirect to the review cards view
+            res.redirect('/user/flashcards.html');
           } else {
             // user does not have flashcards
-            res.redirect('/user/flashcards.html');  // FIXME: Need to redirect to the create cards view
+            res.redirect('/user/flashcards.html');
           }
         }
       }
@@ -371,6 +413,7 @@ app.get('/user/*',
 app.get('/username', usernameHandler);
 app.get('/hascard', hasCardHandler);
 app.get('/getcard', getCardHandler);
+app.post('/putresult', putResultHandler);
 app.get('/translate', translateTextHandler);
 app.post('/store', queryHandler);   // if not, is it a valid query?
 app.use( fileNotFound );            // otherwise not found
