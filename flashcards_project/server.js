@@ -233,8 +233,8 @@ function getCardHandler(req, res) {
    * USE GET WHEN When you know that the result set contains zero or one row
    */
 
-  // let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
-  let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = 114003422437955620000`; // FIXME: remove this line and uncomment above line after
+  let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
+  // let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = 114003422437955620000`;
 
   flashcardDb.get(searchCmdStr, getCardCallback);
 
@@ -255,8 +255,8 @@ function getCardHandler(req, res) {
       // let array_of_cards = new Array(rowData['count(row_id)']);
       let array_of_cards = [];
 
-      // let rowIDCmdStr = `SELECT row_id FROM Flashcards WHERE user_id = ${req.user.google_id}`;
-      let rowIDCmdStr = `SELECT row_id FROM Flashcards WHERE user_id = 114003422437955620000`; // FIXME: remove this line and uncomment above line after
+      let rowIDCmdStr = `SELECT row_id FROM Flashcards WHERE user_id = ${req.user.google_id}`;
+      // let rowIDCmdStr = `SELECT row_id FROM Flashcards WHERE user_id = 114003422437955620000`;
 
       /**
        * http://www.sqlitetutorial.net/sqlite-nodejs/query/ reference
