@@ -143,16 +143,16 @@ function hasCardHandler(req, res) {
  */
 
 function getCardHandler(req, res) {
-  // let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
-
   /**
    * The get() method executes an SQL query and calls the callback function on the first result row. 
    * In case the result set is empty, the row argument is undefined.
    * USE GET WHEN When you know that the result set contains zero or one row
    */
 
-  // flashcardDb.get(searchCmdStr, getCardCallback);
-  flashcardDb.get(`SELECT count(row_id) FROM Flashcards WHERE user_id = ?`, [106024817130400200000], getCardCallback);
+  // let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = ${req.user.google_id}`;
+  let searchCmdStr = `SELECT count(row_id) FROM Flashcards WHERE user_id = 114003422437955620000`; // FIXME: remove this line and uncomment above line after
+
+  flashcardDb.get(searchCmdStr, getCardCallback);
 
   function getCardCallback(err, rowData) {
     if (err) {
@@ -160,72 +160,106 @@ function getCardHandler(req, res) {
     } else {
       console.log("Successfully retrieved user's flashcards from database. Received:", rowData);
 
-      console.log("THIS IS THE LENG OF rowData COunt  ", rowData['count(row_id)']);
-      let array_of_cards = new Array(rowData['count(row_id)']); 
-      // let sql = `SELECT row_id
-      //             FROM Flashcards
-      //             WHERE user_id = ${req.user.google_id}`;
-                  let sql = `SELECT row_id
-                  FROM Flashcards
-                  WHERE user_id = 106024817130400200000`;
-      // assign variable to get the length
-      let i = rowData['count(row_id)'];
-      console.log("THIS IS THE LENG OF ARRAY ", array_of_cards.length);
+      console.log("User currently has this many flashcards in database:", rowData['count(row_id)']);
+
+      // let array_of_cards = new Array(rowData['count(row_id)']);
+      let array_of_cards = [];
+
+      // let rowIDCmdStr = `SELECT row_id FROM Flashcards WHERE user_id = ${req.user.google_id}`;
+      let rowIDCmdStr = `SELECT row_id FROM Flashcards WHERE user_id = 114003422437955620000`; // FIXME: remove this line and uncomment above line after
+      
       /**
        * http://www.sqlitetutorial.net/sqlite-nodejs/query/ reference
-       * The each() method executes an SQL query with specified parameters 
-       * and calls a callback for every row in the result set.
        */
-      flashcardDb.each(sql, (err,row) => {
+      flashcardDb.all(rowIDCmdStr, (err, rowData) => {
         if (err) {
-          console.log("Error occurred in getCardCallback function2. Error is:", err);          
-        } 
-        // loop through until all row gets called and assign it to array
-        array_of_cards[i] = row.row_id;
-        // update the i as the function each loop through the row
-        // i++; // figure out why its still 0
-      });
-      console.log("this is i value at the moment, ", i);
+          console.log("Error occurred in flashcardDb.each call. Error is:", err);          
+        } else {
+          console.log("ROW DATA is:", rowData);
 
-      //******************** THE BOTTOM PART NEED TO BE FIXED */
-      let randNum = Math.floor((Math.random() * i));
-      let randomCards = array_of_cards[randNum];
-      
-      flashcardDb.get(`SELECT *
-                      FROM Flashcards
-                      WHERE row_id = ?`, [randomCards],
-        (err, rowData2) => {
-
-          if (err) {
-            console.log("Error occurred in hasCardCallback function. Error is:", err);
-          } else {
-            console.log("Successfully retrieved retrieved user's flashcards count from database. Received:", rowData2);
-                             
-            // update the numShow in the database 
-            let totalShow = rowData2.num_show + 1;
-                          
-            flashcardDb.run(`UPDATE Flashcards SET num_show=? `,[totalShow], 
-                                          
-              (err, updateRow) => {
-                if (err) {
-                  console.log("Error occurred in updating the num_show for the flashcard. Error is:", err);
-                } else {
-                  console.log("The num_show for the flashcard has been updated! it is now ", updateRow);
-                }
-              }
-            ); // the end of flashCardDb.run
-
-            // function call to make sure it update the row
-            // put value in from the second cards into the JSON and send it
-            res.json(
-              {
-                "unique_identifier":rowData2.row_id,
-                "englishText": rowData2.english_text,
-                "translatedText": rowData2.trans_text
-              }
-            );
+          // Loop through all the flashcards and assign the row_id of each flashcard into the array
+          for (let i = 0; i < rowData.length; i++) {
+            array_of_cards[i] = rowData[i].row_id;
+            console.log("Inserted " + rowData[i].row_id + " into the array_of_cards");
+            console.log("The array currently contains:", array_of_cards);
           }
-        }); // the end of flashcardDB.Get
+
+          let randNum = Math.floor((Math.random() * array_of_cards.length));
+          let aRandomCardRowID = array_of_cards[randNum];
+
+          flashcardDb.get(`SELECT *
+                          FROM Flashcards
+                          WHERE row_id = ?`, [aRandomCardRowID],
+            (err, rowData2) => {
+
+              if (err) {
+                console.log("Error occurred in getting the Flashcard Table's columns corresponding to aRandomCardRowID. Error is:", err);
+              } else {
+                console.log("Successfully retrieved the Flashcard Table's columns corresponding to aRandomCardRowID from database. Received:", rowData2);
+      
+                // update the numShow in the database 
+                let totalShow = rowData2.num_show + 1;
+
+                // function call to make sure it update the row
+                flashcardDb.run(`UPDATE Flashcards SET num_show = ? WHERE row_id = ?`,[totalShow, aRandomCardRowID], 
+                                              
+                  (err, updateRow) => {
+                    if (err) {
+                      console.log("Error occurred in updating the num_show for the flashcard. Error is:", err);
+                    } else {
+                      console.log("The num_show for the flashcard has been updated!");
+
+
+                      console.log("num_correct:", rowData2.num_correct);
+                      console.log("num_show:", rowData2.num_show);
+
+                      let computedScore;
+
+                      if (rowData2.num_show == 0) {
+                        computedScore = Math.max(1,5-rowData2.num_correct) + Math.max(1,5-rowData2.num_show);
+                      } else {
+                        computedScore = Math.max(1,5-rowData2.num_correct) + Math.max(1,5-rowData2.num_show) + 5*( (rowData2.num_show-rowData2.num_correct)/rowData2.num_show);
+                      }
+
+                      console.log("Score is:", computedScore);
+
+                      let randNum2 = Math.floor((Math.random() * 16)); // random number [0, 15]
+
+                      if (randNum2 <= computedScore) {
+                        // show the card
+                        res.json(
+                          {
+                            "unique_identifier" : rowData2.row_id,
+                            "englishText" : rowData2.english_text,
+                            "translatedText": rowData2.trans_text
+                          }
+                        );
+                      } else {
+                        // don't show the card, need to find a different card
+                        
+                      }
+                      
+                    }
+                  }
+                ); // the end of flashCardDb.run
+
+              }
+          }); // the end of flashcardDb.Get
+
+
+
+
+
+
+
+
+
+
+
+
+          
+        }
+      });
     }
   } // getCardCallback
 } // getCardHandler
