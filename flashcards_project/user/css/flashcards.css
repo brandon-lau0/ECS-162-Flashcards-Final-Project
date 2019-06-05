@@ -64,6 +64,10 @@ div.titlebar-format {
   padding-right: 0.5em;
 }
 
+#review-button {
+  cursor: pointer;
+}
+
 #add-button {
   justify-self: left;
 
@@ -72,6 +76,10 @@ div.titlebar-format {
   padding: 0.5em;
   padding-left: 2em;
   padding-right: 2em;
+}
+
+#add-button:hover {
+  cursor: pointer;
 }
 
 #top-button:hover {
