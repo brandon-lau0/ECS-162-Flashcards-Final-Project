@@ -406,10 +406,10 @@ app.get('/auth/accepted',
           console.log("Successfully found whether or not user has/does not have flashcards in database:", rowData);
           if (rowData) {
             // user has flashcards
-            res.redirect('/user/flashcards.html'); // FIXME: Need to redirect to the review cards view
+            res.redirect('/user/flashcards.html');
           } else {
             // user does not have flashcards
-            res.redirect('/user/flashcards.html');  // FIXME: Need to redirect to the create cards view
+            res.redirect('/user/flashcards.html');
           }
         }
       }
