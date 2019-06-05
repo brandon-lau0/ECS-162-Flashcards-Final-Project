@@ -286,7 +286,7 @@ function getCardHandler(req, res) {
           flashcardDb.all(
             `SELECT *
                           FROM Flashcards
-                          WHERE user_id = 114003422437955620000`,
+                          WHERE user_id = ${req.user.google_id}`, 
             (err, rowData2) => {
               let computedScore;
               if (err) {
@@ -341,7 +341,7 @@ function getCardHandler(req, res) {
 
                   if (randNum2 <= computedScore) {
                     // update the numShow in the database
-                    let totalShow = rowData2.num_show + 1;
+                    let totalShow = rowData2[randomNumberForScore].num_show + 1;
                     console.log("hello???");
                     // function call to make sure it update the row
                     flashcardDb.run(
