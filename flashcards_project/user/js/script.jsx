@@ -284,7 +284,6 @@ class ReviewCorrect extends React.Component {
   }
 
   render() {
-    // TODO: correct box
     return (
       <div className="review-correct helvetica">
         <span>CORRECT!</span>
@@ -338,7 +337,6 @@ class ReviewCard extends React.Component {
         <div className="card-body">
           <ReviewCardBack
             text={this.props.backText}
-            // TODO:
             correct={this.props.correct}
           />
           <ReviewCardFront text={this.props.frontText} />

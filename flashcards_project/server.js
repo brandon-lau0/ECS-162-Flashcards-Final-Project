@@ -229,82 +229,67 @@ function getCardHandler(req, res) {
 
           let randNum = Math.floor((Math.random() * array_of_cards.length));
           let aRandomCardRowID = array_of_cards[randNum];
-
-          flashcardDb.get(`SELECT *
+          // 114003422437955620000
+          // get all the cards from one user and put it into array.
+          flashcardDb.all(`SELECT *
                           FROM Flashcards
-                          WHERE row_id = ?`, [aRandomCardRowID],
+                          WHERE user_id = 114003422437955620000`,
             (err, rowData2) => {
-
+              
+              let computedScore;
               if (err) {
                 console.log("Error occurred in getting the Flashcard Table's columns corresponding to aRandomCardRowID. Error is:", err);
               } else {
-                console.log("Successfully retrieved the Flashcard Table's columns corresponding to aRandomCardRowID from database. Received:", rowData2);
-      
-                // update the numShow in the database 
-                let totalShow = rowData2.num_show + 1;
-
-                // function call to make sure it update the row
-                flashcardDb.run(`UPDATE Flashcards SET num_show = ? WHERE row_id = ?`,[totalShow, aRandomCardRowID], 
-                                              
-                  (err) => {
-                    if (err) {
-                      console.log("Error occurred in updating the num_show for the flashcard. Error is:", err);
-                    } else {
-                      console.log("The num_show for the flashcard has been updated!");
-
-
-                      console.log("num_correct:", rowData2.num_correct);
-                      console.log("num_show:", rowData2.num_show);
-
-                      let computedScore;
-
-                      if (rowData2.num_show == 0) {
-                        computedScore = Math.max(1,5-rowData2.num_correct) + Math.max(1,5-rowData2.num_show);
-                      } else {
-                        computedScore = Math.max(1,5-rowData2.num_correct) + Math.max(1,5-rowData2.num_show) + 5*( (rowData2.num_show-rowData2.num_correct)/rowData2.num_show);
-                      }
-
-                      console.log("Score is:", computedScore);
-
-                      let randNum2 = Math.floor((Math.random() * 16)); // random number [0, 15]
+                console.log("Hell YEAH! we got an array of flashCards. Received:", rowData2);
+                console.log("This is the array card length ", array_of_cards.length)
+               for (let i = 0; i < 1000000000000; i++){
+                  let randomNumberForScore = Math.floor((Math.random() * array_of_cards.length));
+                  // console.log("This is random Number ",randomNumberForScore);
+                  // console.log("This is test for getting the num_show ", rowData2[randomNumberForScore].english_text);
+                  if (rowData2[randomNumberForScore].num_show == 0) {
+                    console.log("First case read ", rowData2[randomNumberForScore].num_show);
+                    computedScore = Math.max(1,5-rowData2[randomNumberForScore].num_correct) + Math.max(1,5-rowData2[randomNumberForScore].num_show) +5;
+                  } else {
+                    console.log("Second case read ", rowData2[randomNumberForScore].num_show);
+                    computedScore = Math.max(1,5-rowData2[randomNumberForScore].num_correct) + Math.max(1,5-rowData2[randomNumberForScore].num_show) + 5*( (rowData2[randomNumberForScore].num_show-rowData2[randomNumberForScore].num_correct)/rowData2[randomNumberForScore].num_show);
+                  }
+                  let randNum2 = Math.floor((Math.random() * 16)); // random number [0, 15]
 
                       if (randNum2 <= computedScore) {
+                         // update the numShow in the database 
+                          let totalShow = rowData2.num_show + 1;
+                          console.log("hello???");
+                          // function call to make sure it update the row
+                          flashcardDb.run(`UPDATE Flashcards SET num_show = ? WHERE row_id = ?`,[totalShow, rowData2[randomNumberForScore].row_id], 
+                                                        
+                            (err) => {
+                              if (err) {
+                                console.log("Error occurred in updating the num_show for the flashcard. Error is:", err);
+                              } else {
+                                console.log("The num_show for the flashcard has been updated!"); 
+                              }
+                            }
+                          ); // the end of flashCardDb.run
                         // show the card
+                        console.log("we are sending the following to the json:");
+                        console.log(rowData2[randomNumberForScore].row_id);
+                        console.log(rowData2[randomNumberForScore].english_text);
+                        console.log(rowData2[randomNumberForScore].trans_text);
                         res.json(
                           {
-                            "unique_identifier" : rowData2.row_id,
-                            "englishText" : rowData2.english_text,
-                            "translatedText": rowData2.trans_text
+                            "unique_identifier" : rowData2[randomNumberForScore].row_id,
+                            "englishText" : rowData2[randomNumberForScore].english_text,
+                            "translatedText": rowData2[randomNumberForScore].trans_text
                           }
                         );
+                        break;
                       } else {
-                        // don't show the card, need to find a different card
-                        res.json(
-                          {
-                            "need_to_show_a_different_card" : "not_implemented_yet"
-                          }
-                        )
-                      }
-                      
-                    }
-                  }
-                ); // the end of flashCardDb.run
-
-              }
-          }); // the end of flashcardDb.Get
-
-
-
-
-
-
-
-
-
-
-
-          
-        }
+                        // don't show the card, need to find a different card  
+                        }             
+                    }         
+                }
+           }); // the end of flashcardDb.Get 
+      }
       });
     }
   } // getCardCallback
@@ -581,7 +566,6 @@ passport.deserializeUser((dbRowID, done) => {
       }
     }
 
-
     let searchCmdStr1 = `SELECT count(google_id) FROM UserInfo WHERE google_id = ${dbRowID}`;
     flashcardDb.get(searchCmdStr1, getUserInfoCallback2);
 
@@ -614,116 +598,3 @@ passport.deserializeUser((dbRowID, done) => {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function queryHandler(req, res, next) {
-//     let url = req.url;
-//     let qObj = req.query;
-//     let str = qObj.word;
-//     console.log("this is qobh", str);
-//     let stringRev ="";
-//     for(let i= 0; i<str.length; i++){
-//         stringRev = str[i]+stringRev;
-//     }
-  
-//     if (qObj.word != undefined) {
-//     console.log("hello this is qObj.word" ,req.query.word);
-// 	res.json( {"palindrome" :  req.query.word + stringRev } );
-//     }
-//     else {
-// 	next();
-//     }
-// }
-
-/************************************INSERT VALUES TO DATABASE  ***************************/
-// db.run(`INSERT INTO Flashcards(user_id,
-//                                english_text,
-//                                trans_text,
-//                                num_show,
-//                                num_correct) VALUES(8, 'testBrandyBuddy', 'testECS162', 99, 10)`, function(err) {
-//     if (err) {
-//       return console.log(err.message);
-//     }
-//     // get the last insert id
-//     console.log(`A row has been inserted with userID ${this.changes}`);
-//   });
-/************************************END OF INSERT VALUES *******************************/
-
-/**************************UPDATE THE DATABASE*************************/
-// let data = [X, Y];
-// X is the value you want to update to the database
-// Y is the value you want to remove from the database
-// so change from Y to X.
-
-// let sql = `UPDATE Flashcards
-//             SET user_id = ?
-//             WHERE user_id = ?`;
- 
-// db.run(sql, data, function(err) {
-//   if (err) {
-//     return console.error(err.message);
-//   }
-//   console.log(`Row(s) updated: ${this.changes}`);
-// });
-/************************END OF UPDATE DATABASE ***************************/
-
-/************************* Getting the value from the database ***************/
-// let sql = `SELECT user_id id,
-//                         english_text eText,
-//                         trans_text tText,
-//                         num_show nshow,
-//                         num_correct ncorrect
-//                 FROM Flashcards
-//                 WHERE user_id  = ?`;
-//         let user_id = 8; // need to ask prof about this since we dont have to have user_id yet
-//         // maybe we can chage it into rowid or something 
-        
-//         // first row only
-//         db.get(sql, [user_id], (err, row) => {
-//         if (err) {
-//             return console.log("Something is wrong cannot put insert data to the Database");
-//         }
-//         return row
-//             ? console.log("this is the result for your queries select: ", row.id, row.eText, row.tText, row.nshow, row.ncorrect)
-//             : console.log(`No playlist found with the id ${user_id}`);
-        
-//         });
