@@ -149,6 +149,7 @@ class CreationCards extends React.Component {
             onKeyDown={this.onKeyDown}
             onKeyUp={this.onKeyUp}
             style={this.state.inputStyle}
+            required
           />
         </figure>
         <figure className="card-add">
@@ -207,10 +208,11 @@ class CreationCards extends React.Component {
    */
   onKeyDown = event => {
     if (event.key == "Enter") {
-      const input = document.getElementById(this.props.inputId).value;
+      const input = document.getElementById(this.props.inputId).value.trim();
+      document.getElementById(this.props.inputId).value = input;
 
       event.preventDefault();
-      requestTranslation(input.trim(), translation => {
+      requestTranslation(input, translation => {
         this.setState({ tlText: translation });
       });
     }
@@ -236,11 +238,16 @@ class CreationCards extends React.Component {
     const en = document.getElementById(this.props.inputId).value;
     const tl = document.getElementById(this.props.outputId).innerText;
 
-    // trim tl just in case
-    saveCard(en.trim(), tl.trim());
+    if (this.state.tlText != "") {
+      // trim tl just in case
+      saveCard(en, tl);
 
-    document.getElementById(this.props.inputId).value = "";
-    this.setState({ tlText: "" });
+      document.getElementById(this.props.inputId).value = "";
+      this.setState({ tlText: "" });
+    } else {
+      // if tlText == "", then either the english is "" or no translation happened yet.
+      alert("Input text and press enter to see the translation first!");
+    }
   };
 }
 

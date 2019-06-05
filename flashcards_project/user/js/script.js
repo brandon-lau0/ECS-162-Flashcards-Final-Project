@@ -199,10 +199,11 @@ var CreationCards = function (_React$Component4) {
 
     _this5.onKeyDown = function (event) {
       if (event.key == "Enter") {
-        var input = document.getElementById(_this5.props.inputId).value;
+        var input = document.getElementById(_this5.props.inputId).value.trim();
+        document.getElementById(_this5.props.inputId).value = input;
 
         event.preventDefault();
-        requestTranslation(input.trim(), function (translation) {
+        requestTranslation(input, function (translation) {
           _this5.setState({ tlText: translation });
         });
       }
@@ -222,11 +223,16 @@ var CreationCards = function (_React$Component4) {
       var en = document.getElementById(_this5.props.inputId).value;
       var tl = document.getElementById(_this5.props.outputId).innerText;
 
-      // trim tl just in case
-      saveCard(en.trim(), tl.trim());
+      if (_this5.state.tlText != "") {
+        // trim tl just in case
+        saveCard(en, tl);
 
-      document.getElementById(_this5.props.inputId).value = "";
-      _this5.setState({ tlText: "" });
+        document.getElementById(_this5.props.inputId).value = "";
+        _this5.setState({ tlText: "" });
+      } else {
+        // if tlText == "", then either the english is "" or no translation happened yet.
+        alert("Input text and press enter to see the translation first!");
+      }
     };
 
     _this5.state = { inputStyle: _this5.inputStyle(), tlText: undefined };
@@ -256,7 +262,8 @@ var CreationCards = function (_React$Component4) {
             placeholder: "English",
             onKeyDown: this.onKeyDown,
             onKeyUp: this.onKeyUp,
-            style: this.state.inputStyle
+            style: this.state.inputStyle,
+            required: true
           })
         ),
         React.createElement(
