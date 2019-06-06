@@ -1,3 +1,6 @@
+To run this web application, do "node server.js"
+The server.js file can be found in this file path: ECS-162-Flashcards-Final-Project/flashcards_project
+
 When we were testing our web application, we occasionally ran into an issue where when we ran the server using "node server.js", sometimes the Google Chrome cannot display our webpage properly saying "This site can't be reached. localhost refused to connect."
 
 We figured out this this issue had to do with the cookies store in Chrome. To resolve this issue, we cleared the cookies in Google Chrome then ran the server again using "node server.js" and this fixed the issue.
